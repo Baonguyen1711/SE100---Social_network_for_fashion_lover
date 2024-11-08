@@ -25,6 +25,8 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
 
 const Explore = () => {
   const [selectedImage, setSelectedImage] = useState<ImageItem | null>(null);
+
+  
   const handleImageClick = (image: ImageItem) => {
     setSelectedImage(image);
   };

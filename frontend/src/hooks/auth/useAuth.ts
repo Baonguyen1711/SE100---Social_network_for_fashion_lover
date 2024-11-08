@@ -17,7 +17,6 @@ const useAuth = () => {
             const jwt = data.jwt
             console.log(data)
             
-            
             localStorage.setItem("jwt", jwt)
             console.log("login success")
         } catch(e) {
