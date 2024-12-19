@@ -5,6 +5,26 @@ export interface User {
     // Add any other user-related properties
 }
 
+export interface MessageComponentType {
+    content: string,
+    timeStamp: string,
+    isSender: boolean|undefined
+  }
+
+
+export interface RecentChat {
+    _id: string,
+    latestMessage: string,
+    timeStamp: string
+}
+
+
+export interface Recipent {
+    recipentEmail: string | null,
+    senderEmail: string |null,
+    content: string | null
+}
+
 export interface AuthState {
     isAuthenticated: boolean;
     payload: {

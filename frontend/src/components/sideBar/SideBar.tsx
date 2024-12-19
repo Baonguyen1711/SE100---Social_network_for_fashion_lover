@@ -1,16 +1,68 @@
-import React from 'react'
-import { Box, Avatar, Typography, Link, IconButton } from '@mui/material'
-import { HomeOutlined, WindowOutlined, PeopleOutline, TagOutlined, SendOutlined, ExitToAppOutlined } from '@mui/icons-material'
-import { useLocation } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Box, Avatar, Typography, Link, IconButton } from "@mui/material";
+import {
+  HomeOutlined,
+  WindowOutlined,
+  PeopleOutline,
+  TagOutlined,
+  SendOutlined,
+  ExitToAppOutlined,
+} from "@mui/icons-material";
+import { useLocation } from "react-router-dom";
+import { useSelectedUser } from "../message/SelectedUserContext";
+import { lightTheme } from "../../themes/theme";
 
-const SideBar = () => {
+interface SideBarProps {
+  isOpened: boolean;
+}
 
-  const location = useLocation()
+const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
+  const location = useLocation();
 
   const isActive = (path: string) => location.pathname.split("/")[1] === path;
-  console.log(location.pathname.split("/")[1])
-  return (
+  //const {selectedUserAvatar, selectedUserName, selectedUserEmail} = useSelectedUser()
+  const [userName, setUserName] = useState<string>("");
+  const [userAvatar, setUserAvatar] = useState<string>("");
+  console.log(location.pathname.split("/")[1]);
+  const currentEmail = localStorage.getItem("email");
 
+  const handleLogout = () => {
+    localStorage.setItem("jwt", "");
+  };
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      debugger;
+      try {
+        const url = `http://127.0.0.1:5000/api/v1/user/info?email=${currentEmail}`;
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error in getting message`);
+        }
+
+        const data = await response.json();
+        //console.log("user data", data)
+        setUserAvatar(data.userInfo.avatar);
+        localStorage.setItem("userAvatar", data.userInfo.avatar);
+        setUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`);
+
+        console.log(userAvatar);
+        console.log(userName);
+      } catch (e) {
+        console.log("Some errors happen", e);
+      }
+    };
+
+    getUserInfo();
+  }, []);
+  return isOpened ? (
     <Box
       component="div"
       id="wrapperSideBar"
@@ -19,10 +71,12 @@ const SideBar = () => {
       display="flex"
       justifyContent="center"
       alignContent="center"
-      position={'fixed'}
+      position={"fixed"}
       top={0}
       sx={{
-        backgroundColor: "#ffffff"
+        backgroundColor: lightTheme.colors.background,
+        boxShadow: "5px 0px 10px -5px rgba(0, 0, 0, 0.2)",
+        overflowY: "scroll",
       }}
     >
       <Box
@@ -32,7 +86,7 @@ const SideBar = () => {
         height="80%"
         marginTop="10%"
       >
-        <Box
+        {/* <Box
           component="div"
           id="avatar"
           height="150px"
@@ -43,7 +97,7 @@ const SideBar = () => {
 
         >
           <Avatar
-            src="https://scontent.fsgn7-2.fna.fbcdn.net/v/t39.30808-6/451270082_1185848232626306_1812262998793060985_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHdJebdYHUi0wsO5KaqLPeU2uvA1eVodLva68DV5Wh0u94hVLxba4_kQMK5Mhgj0BuGsXqmAtmjjHRGmA1p5JGn&_nc_ohc=q0p9WSRhUrUQ7kNvgGSGGBx&_nc_zt=23&_nc_ht=scontent.fsgn7-2.fna&_nc_gid=A6KqNieAJtOHlN67VOrv1CS&oh=00_AYATeOaE9SJI644cDiPjeAfhQHsUuVr5wHMrQ3srQkRNJQ&oe=671FFDE8"
+            src={userAvatar}
             sx={{
               height: "100%",
               width: "150px"
@@ -56,10 +110,10 @@ const SideBar = () => {
           variant="h5"
           align="center"
           fontFamily="Inter"
-          color="#A1A7B3"
+          color={lightTheme.colors.text}
           marginTop="10px"
         >
-          Bao Nguyen
+          {userName}
 
         </Typography>
         <Typography
@@ -68,84 +122,460 @@ const SideBar = () => {
           variant="body1"
           align="center"
           fontFamily="Inter"
-          color="#A1A7B3"
+          color={lightTheme.colors.text}
         >
-          @Bao.nguyen
+          {`@${currentEmail?.replace("@gmail.com", "")}`}
 
-        </Typography>
+        </Typography> */}
 
         <Box
           display="flex"
           flexDirection="column"
           gap={2}
-          width={250}
+          //width="80%"
+          alignContent="center"
           //bgcolor="white"
           padding={2}
         >
+          <Box
+            sx={{}}
+            display="flex"
+            alignItems="center"
+            gap={1.5}
+            id="home"
+            height="40px"
+            padding="10px"
+            borderRadius="10px"
+          >
+            <Avatar
+              src={userAvatar}
+              sx={{
+                width: "25px",
+                height: "25px",
+              }}
+            />
+            <Typography
+              fontFamily="Inter"
+              color={lightTheme.colors.text}
+              fontWeight="500"
+            >
+              {userName}
+            </Typography>
+          </Box>
 
           <Link href="/home" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="home" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("home") ? "#CBD9C4" : "#ffffff"}>
-              <HomeOutlined sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Home</Typography>
-
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="home"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("home")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <HomeOutlined sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Home
+              </Typography>
             </Box>
           </Link>
 
           <Link href="/explore" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="explore" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("explore") ? "#CBD9C4" : "#ffffff"}>
-              <WindowOutlined sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Explore</Typography>
-
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="explore"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("explore")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <WindowOutlined sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Explore
+              </Typography>
             </Box>
           </Link>
-
 
           <Link href="/message" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="group" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("group") ? "#CBD9C4" : "#ffffff"}>
-              <PeopleOutline sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Group</Typography>
-
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="group"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("group")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <PeopleOutline sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Group
+              </Typography>
             </Box>
           </Link>
-
 
           <Link href="/favourite" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="favorite" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("favourite") ? "#CBD9C4" : "#ffffff"}>
-              <TagOutlined sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Favourite</Typography>
-
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="favorite"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("favourite")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <TagOutlined sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Favourite
+              </Typography>
             </Box>
           </Link>
-
 
           <Link href="/message" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="message" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("message") ? "#CBD9C4" : "#ffffff"}>
-              <SendOutlined sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Message</Typography>
-
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="message"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("message")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <SendOutlined sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Message
+              </Typography>
             </Box>
           </Link>
-
 
           <Box flexGrow={2} />
 
           {/* Item sticking to the bottom */}
 
           <Link href="/login" underline="none">
-            <Box display="flex" alignItems="center" gap={1} id="logOut" height="40px">
-              <ExitToAppOutlined sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Log out</Typography>
+            <Box
+              component="div"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              onClick={handleLogout}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="logOut"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+            >
+              <ExitToAppOutlined sx={{ color: lightTheme.colors.text }} />
+              <Typography
+                fontFamily="Inter"
+                color={lightTheme.colors.text}
+                fontWeight="500"
+              >
+                Log out
+              </Typography>
+            </Box>
+          </Link>
+        </Box>
+      </Box>
+    </Box>
+  ) : (
+    <Box
+      component="div"
+      id="wrapperSideBar"
+      width="100%"
+      height="100vh"
+      display="flex"
+      justifyContent="center"
+      alignContent="center"
+      sx={{
+        backgroundColor: lightTheme.colors.background,
+        boxShadow: "2px 0px 10px -5px rgba(0, 0, 0, 0.2)",
+        overflowY: "scroll",
+      }}
+    >
+      <Box
+        component="div"
+        id="mainSideBar"
+        width="80%"
+        height="80%"
+        marginTop="10%"
+      >
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={2}
+          //width="80%"
+          alignContent="center"
+          //bgcolor="white"
+          padding={2}
+        >
+          <Box
+            sx={{}}
+            display="flex"
+            alignItems="center"
+            id="home"
+            height="40px"
+            padding="10px"
+            borderRadius="10px"
+          >
+            <Avatar
+              src={userAvatar}
+              sx={{
+                width: "25px",
+                height: "25px",
+              }}
+            />
+          </Box>
 
+          <Link href="/home" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              id="home"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("home")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <HomeOutlined
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Home</Typography> */}
             </Box>
           </Link>
 
-        </Box>
+          <Link href="/explore" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="explore"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("explore")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <WindowOutlined
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Explore</Typography> */}
+            </Box>
+          </Link>
 
+          <Link href="/message" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="group"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("group")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <PeopleOutline
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Group</Typography> */}
+            </Box>
+          </Link>
+
+          <Link href="/favourite" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="favorite"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("favourite")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <TagOutlined
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Favourite</Typography> */}
+            </Box>
+          </Link>
+
+          <Link href="/message" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="message"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+              bgcolor={
+                isActive("message")
+                  ? lightTheme.colors.primary
+                  : lightTheme.colors.background
+              }
+            >
+              <SendOutlined
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Message</Typography> */}
+            </Box>
+          </Link>
+
+          <Box flexGrow={2} />
+
+          {/* Item sticking to the bottom */}
+
+          <Link href="/login" underline="none">
+            <Box
+              sx={{
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.08)", // Change background color on hover
+                  cursor: "pointer", // Change cursor to pointer on hover
+                },
+              }}
+              display="flex"
+              alignItems="center"
+              gap={1}
+              id="logOut"
+              height="40px"
+              padding="10px"
+              borderRadius="10px"
+            >
+              <ExitToAppOutlined
+                sx={{ color: lightTheme.colors.text, width: "100%" }}
+              />
+              {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Log out</Typography> */}
+            </Box>
+          </Link>
+        </Box>
       </Box>
     </Box>
+  );
+};
 
-
-  )
-}
-
-export default SideBar
+export default SideBar;
