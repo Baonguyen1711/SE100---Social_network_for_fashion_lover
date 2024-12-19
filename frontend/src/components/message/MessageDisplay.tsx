@@ -1,23 +1,45 @@
 import React, { ReactEventHandler, useRef, useEffect } from 'react'
+//import ColorThief, { RGBColor } from 'colorthief'
 import MessageComponent from './MessageComponent'
 import { Box } from '@mui/material'
 import { MessageComponentType } from '../../types'
 import { useSelectedUser } from './SelectedUserContext'
 import { useSocket } from './SocketContext'
+import { useBackground } from './BackgroundContext'
 import { useState } from 'react'
+import { lightTheme } from '../../themes/theme'
 
 
 interface MessageComponentArray {
-  messages: MessageComponentType[] | []
+  //messages: MessageComponentType[] | []
+  isChatbot: boolean
 }
 
-const MessageDisplay: React.FC<MessageComponentArray> = () => {
+const MessageDisplay: React.FC<MessageComponentArray> = ({isChatbot}) => {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const recipentEmail = localStorage.getItem("email")
   const { selectedUserEmail } = useSelectedUser()
   const [recentMessages, setRecentMessages] = useState<MessageComponentType[]>([])
-  const {messages, setMessages} = useSocket();
+  const {messages, setMessages, chatbotMessages, setChatbotMessages} = useSocket();
+  const {backgroundImageOver, setPalette} = useBackground()
+
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [messageColor, setMessageColor] = useState<string>("#f0f0f0");
+
+
+  useEffect(()=> {
+    //const colorThief = new ColorThief();
+    const img = new Image()
+    img.src= backgroundImageOver
+    img.crossOrigin = "anonymous"; // Important for cross-origin images
+
+    img.onload = () => {
+      //const palette = colorThief.getPalette(img);
+      //setPalette(palette)
+     };
+
+  },[backgroundImageOver])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,7 +67,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = () => {
         }
 
         const data = await response.json()
-        setRecentMessages(data.chatHistory)
+        setRecentMessages(data.chatHistory.reverse())
 
 
       } catch (e) {
@@ -63,26 +85,43 @@ const MessageDisplay: React.FC<MessageComponentArray> = () => {
   }, [selectedUserEmail])
 
 
+
   return (
     <Box
       ref={scrollRef}
       component="div"
-      height="100%"
-      bgcolor="#CBD9C4"
-      marginTop="2px"
+      height= "100%"
+      bgcolor={isChatbot?"#89966b":lightTheme.colors.secondary}
+      //marginTop="2px"
       padding="20px"
       sx={{
-        overflowY: "auto"
+        overflowY: "scroll",
+        backgroundImage: `url(${backgroundImageOver})`,
+        backgroundSize: "cover"
       }}
     >
       {
+        !isChatbot?
         [...recentMessages,...messages].map((message) => (
 
           <MessageComponent
             key={message.timeStamp}
             content={message.content}
-            timeStamp={message.timeStamp}
+            timeStamp={new Date(message.timeStamp).toLocaleString().slice(0,9)}
             isSender={message.isSender}
+            isChatbot={false}
+          />
+
+        ))
+        :
+        [...chatbotMessages].map((message) => (
+
+          <MessageComponent
+            key={message.timeStamp}
+            content={message.content}
+            timeStamp={new Date(message.timeStamp).toLocaleString().slice(0,9)}
+            isSender={message.isSender}
+            isChatbot={true}
           />
 
         ))

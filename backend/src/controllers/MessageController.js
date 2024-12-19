@@ -1,10 +1,12 @@
+
 const User = require('../models/user')
+
 const Message = require('../models/Message')
 const mongoose = require('mongoose')
 const connectToDb = require('../../src/config/database/db')
 mongoose.set('debug', true)
 
-class RegisterController {
+class MessageController {
 
     //[POST]
     async create(req, res) {
@@ -58,33 +60,82 @@ class RegisterController {
             // await message.save()
 
             const recentMessagesArray = await Message.aggregate([
+
+
                 //get all recieved messages
+
                 {
                     '$match': {
                         'recipentEmail': email,
                         'isDeleted': false
                     }
                 },
+
                 //sort by latest sent message
+
                 {
                     '$sort': {
                         'sendAt': -1
                     }
                 },
+
                 //group by email. content and sendAt
+
                 {
                     '$group': {
                         '_id': '$senderEmail',
                         'latestMessage': { '$first': "$content" },
                         'timeStamp': { '$first': "$sendAt" }
                     }
+
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "_id", // Trường `_id` hiện đang là `senderEmail`
+                        foreignField: "email", // Trường email trong Users
+                        as: "userInfo"
+                    }
+                },
+                {
+                    $unwind: "$userInfo" // Giải nén để lấy thông tin người dùng từ `userInfo`
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        latestMessage: 1,
+                        timeStamp: 1,
+                        "userInfo.firstname": 1, // Lấy thông tin cần thiết từ `userInfo`
+                        "userInfo.lastname": 1,
+                        "userInfo.avatar": 1,
+                        "userInfo.location": 1
+                }
+            }
+                ,
+                {
+                    '$lookup': {
+                        'from': 'users',  
+                        'localField': '_id',  
+                        'foreignField': 'email',  
+                        'as': 'userInfo'
+                    }
+                },
+                // Optionally, unwind userInfo if you want it as a single object
+                {
+                    '$unwind': {
+                        'path': '$userInfo',
+                        'preserveNullAndEmptyArrays': true  // In case there's no matching user
+
+                    }
                 }
 
             ])
 
             const recentMessages = recentMessagesArray.length>0? recentMessagesArray:[]
+
             
             console.log("recentMessages",recentMessages)
+
 
             res.json({
                 'recentMessages': recentMessages
@@ -139,13 +190,16 @@ class RegisterController {
                 },
                 {
                     '$addFields': {
-                        'isSender': { '$eq': ['$senderEmail', senderEmail] }
+
+                        'isSender': { '$eq': ['$senderEmail', senderEmail] },
+                        'timeStamp': '$sendAt'
                     }
                 },
                 //sort by latest sent message
                 {
                     '$sort': {
-                        'sendAt': 1
+
+                        'sendAt': -1
                     }
                 },
                 {
@@ -183,7 +237,9 @@ class RegisterController {
                 senderEmail: senderEmail,
                 recipentEmail: recipentEmail,
                 content: content,
-                sendAt: new Date()
+                sendAt: new Date(),
+                isDeleted: false
+
             })
 
             await newMessage.save()
@@ -205,4 +261,10 @@ class RegisterController {
     // }
 }
 
-module.exports = new RegisterController
+
+module.exports = new MessageController
+
+//param
+//query param
+//body
+

@@ -3,15 +3,19 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { io, Socket } from 'socket.io-client';
 import { MessageComponentType } from '../../types';
 import { RecentChat } from '../../types';
+import { useBackground } from './BackgroundContext';
 const socket = io('http://localhost:4000');
 
 interface SocketContextType {
   socket: Socket;
   messages: MessageComponentType[]
   setMessages: React.Dispatch<React.SetStateAction<MessageComponentType[]>>
+  chatbotMessages: MessageComponentType[]
+  setChatbotMessages: React.Dispatch<React.SetStateAction<MessageComponentType[]>>
   recentChats: RecentChat[];
   setRecentChats: React.Dispatch<React.SetStateAction<RecentChat[]>> // Adjust type according to your message structure
   sendMessage: (message: any) => void; // Function to send messages
+  changeBackground: (image: any) => void
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
@@ -23,17 +27,24 @@ interface SocketProviderProps {
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [recentChats, setRecentChats] = useState<RecentChat[]>([]); // Adjust type as needed
   const [messages, setMessages] = useState<any[]>([])
+  const [chatbotMessages, setChatbotMessages] = useState<any[]>([])
   const currentEmail = localStorage.getItem("email")
-
+  const {setBackgroundImageOver, setSelectedTheme} = useBackground()
   useEffect(()=> {
     socket.emit("connection",currentEmail)
     socket.emit("register",currentEmail)
+
+    socket.on("changeBackground", (image) => {
+      setBackgroundImageOver(image.src)
+      setSelectedTheme(image.theme)
+    })
 
     socket.on("newMessage", (message) => {
       const newRecentChat: RecentChat = {
           "_id": message.sendfrom,
           "latestMessage": message.content,
-          "timeStamp": new Date().toISOString()
+          "timeStamp": new Date().toISOString(),
+          "userInfo": null
       } 
 
       const url = `http://localhost:5000/api/v1/message/post?senderEmail=${message.sendfrom}&recipentEmail=${currentEmail}&content=${message.content}`
@@ -74,7 +85,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         const newMessageComponent:MessageComponentType = {
           "content":message.content,
           "timeStamp": new Date().toISOString(),
-          "isSender": true
+          "isSender": true,
+          "isChatbot": false   
         }
         return [...prevMessageComponent, newMessageComponent]
       })
@@ -89,6 +101,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   },[])
 
  
+
+  const changeBackground = (image: string) => {
+    socket.emit("changeBackground", image)
+  }
   const sendMessage = (message: any) => {
     socket.emit("chatMessage", message);
   };
@@ -102,7 +118,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       
 
   return (
-    <SocketContext.Provider value={{ messages, setMessages, socket, recentChats, setRecentChats, sendMessage }}>
+    <SocketContext.Provider value={{ messages, setMessages, socket, recentChats, setRecentChats, sendMessage, chatbotMessages, setChatbotMessages, changeBackground }}>
       {children}
     </SocketContext.Provider>
   );

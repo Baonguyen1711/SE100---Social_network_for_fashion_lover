@@ -6,7 +6,6 @@ async function connectToDb() {
 
     const uri = process.env.DB_URI
 
-
     await mongoose.connect(uri, {
     })
         .then(() => {

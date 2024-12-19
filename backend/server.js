@@ -20,7 +20,6 @@ const io = socketIo(server, {
         origin: '*', // Allow all origins
         methods: ['GET', 'POST'], // Allowed methods
         allowedHeaders: ['Content-Type'], // Allowed headers
-
     }
 });
 
@@ -32,7 +31,6 @@ const userRegistration = {
 
 io.on('connection', (socket) => {
     console.log(`User connected with id ${socket.id}`);
-  
     // Listen for messages from clients
     socket.on('chatMessage', (sendMessage) => {
         console.log("sendMessage",sendMessage)
