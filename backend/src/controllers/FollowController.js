@@ -1,14 +1,14 @@
-const Follows = require("../models/Follows");
+const Follow = require("../models/Follow");
 const Post = require("../models/Post");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 const connectToDb = require("../config/database/db");
 mongoose.set("debug", true);
 
 class FollowController {
   //[POST]
   async createFollow(req, res) {
-    console.log("Create example");
     try {
       const { followerId, followingId } = req.body;
       if (!followerId || !followingId) {
@@ -16,8 +16,17 @@ class FollowController {
           .status(400)
           .json({ message: "Missing followerId or followingId" });
       }
+      if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followingId)) {
+        return res
+          .status(400)
+          .send({
+            error: "Invalid followerId,followingId format",
+            followerId,
+            followingId,
+          });
+      }
       // Kiểm tra xem đã có bản ghi trong bảng follows hay chưa
-      let followRecord = await Follows.findOne({ followerId, followingId });
+      let followRecord = await Follow.findOne({ followerId, followingId });
 
       if (followRecord) {
         // Nếu bản ghi đã tồn tại, nhưng bị hủy theo dõi trước đó, cập nhật lại isDelete
@@ -28,7 +37,7 @@ class FollowController {
         }
       } else {
         // Nếu bản ghi chưa tồn tại, tạo một bản ghi mới
-        followRecord = new Follows({
+        followRecord = new Follow({
           followerId: followerId,
           followingId: followingId,
           dateTime: new Date(),
@@ -46,6 +55,45 @@ class FollowController {
     }
   }
 
+  async isFollowed(req,res)
+  {
+    try {
+      const { followerId, followingId } = req.body;
+  
+      // Kiểm tra input
+      if (!followerId || !followingId) {
+        return res
+          .status(400)
+          .json({ message: "Missing followerId or followingId" });
+      }
+  
+      // Kiểm tra định dạng ObjectId
+      if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followingId)) {
+        return res.status(400).json({
+          error: "Invalid followerId or followingId format",
+          followerId,
+          followingId,
+        });
+      }
+  
+      // Tìm kiếm trong cơ sở dữ liệu
+      const existingFollow = await Follow.findOne({
+        followerId: new ObjectId(`${followerId}`),
+        followingId: new ObjectId(`${followingId}`),
+      });
+  
+      // Trả về kết quả
+      if (existingFollow) {
+        return res.status(200).json({ isFollowed: true });
+      } else {
+        return res.status(200).json({ isFollowed: false });
+      }
+    } catch (e) {
+      console.log("Error finding following user", e);
+      res.status(500).json({ message: "Error finding following user" });
+    }
+  }
+  
   async createIgnore(req, res) {
     console.log("Create example");
     try {
@@ -55,9 +103,17 @@ class FollowController {
           .status(400)
           .json({ message: "Missing followerId or followingId" });
       }
-      console.log(ignorerId, ignoringId);
+      if (!ObjectId.isValid(ignorerId) || !ObjectId.isValid(ignoringId)) {
+        return res
+          .status(400)
+          .send({
+            error: "Invalid ignorerId,ignoringId format",
+            ignorerId,
+            ignoringId,
+          });
+      }
       // Kiểm tra xem đã có bản ghi trong bảng follows hay chưa
-      let followRecord = await Follows.findOne({
+      let followRecord = await Follow.findOne({
         followerId: ignorerId,
         followingId: ignoringId,
       });
@@ -70,7 +126,7 @@ class FollowController {
         }
       } else {
         // Nếu bản ghi chưa tồn tại, tạo một bản ghi mới
-        followRecord = new Follows({
+        followRecord = new Follow({
           followerId: ignorerId,
           followingId: ignoringId,
           dateTime: new Date(),
@@ -92,49 +148,33 @@ class FollowController {
   async getNotFollows(req, res) {
     try {
       connectToDb();
-      const { followerEmail } = req.query;
+      const { followerId } = req.params;
+      if (!ObjectId.isValid(followerId)) {
+        return res
+          .status(400)
+          .send({
+            error: "Invalid followerId format",
+          });
+      }
       // Bước 1: Lấy danh sách những người mà người dùng đã follow (isDelete = false)
-      const following = await Follows.find({
-        followerId: followerEmail,
+      const following = await Follow.find({
+        followerId: followerId,
         isDelete: false,
       }).populate("followingId");
-      const ignoring = await Follows.find({
-        followerId: followerEmail,
+      const ignoring = await Follow.find({
+        followerId: followerId,
         isDelete: true,
         isIgnore: true,
       }).populate("followingId");
       // Lấy danh sách UserID của những người đã follow
-      const followingEmails = following.map((follow) => follow.followingId);
-      console.log("followingEmails",followingEmails);
+      const followingId= following.map((follow) => follow.followingId);
       //Laysay danh sách UserID của ngững người đã ignore
-      const ignoringEmails = ignoring.map((ignore) => ignore.followingId);
+      const ignoringId = ignoring.map((ignore) => ignore.followingId);
       // Bước 2: Lấy danh sách những người chưa follow (exclude người dùng hiện tại và những người đã follow)
       const notFollowed = await User.find({
-        email: { $nin: [followerEmail, ...followingEmails, ...ignoringEmails] },
+        _id: { $nin: [followerId, ...followingId, ...ignoringId] },
       });
-      // const mutualFriendArray = [];
-      // for (const user of notFollowed) {
-      //   // Lấy danh sách những người mà user này follow
-      //   const mutualFriends = await Follows.find({
-      //     followerId: { $in: followingEmails },
-      //     followingId: user.email,
-      //     isDelete: false,
-      //   });
 
-      //   // Nếu có bạn chung, thêm vào danh sách đề xuất
-      //   if (mutualFriends.length > 0) {
-      //     const mutualFriendsInfo = mutualFriends.map((mf) => ({
-      //       email: await User.find({email: mf.followerId}),  // Lấy email của bạn chung
-      //       id: mf.followingId._id,       // 
-      //     }));
-      //     mutualFriendArray.push(
-      //       ...user.toObject(),
-      //       mutualFriends: mutualFriends.map((mf)=>({
-
-      //       }))
-      //   )}
-      // }
-      
       res.json({
         notFollowed: notFollowed,
       });
@@ -142,15 +182,6 @@ class FollowController {
       console.log(e);
     }
   }
-
-  // async getRencentMessage(req,res) {
-  //     try {
-  //         connectToDb()
-
-  //     } catch(e) {
-  //         console.log("Some errors happen", e)
-  //     }
-  // }
 }
 
 module.exports = new FollowController();

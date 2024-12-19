@@ -10,14 +10,14 @@ import theme from './themes/theme';
 import { ThemeProvider } from '@mui/material';
 import ExplorePage from './pages/explore/ExplorePage';
 import ProfilePage from './pages/profile/ProfilePage';
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage/>}/>
-      <Route path="/explore" element={<ExplorePage/>}/>
-      
+      <Route path="/explore" element={<ExplorePage />} />
       <Route path="/message" element={<MessagePage/>} />
       <Route path="/profile" element={<ProfilePage/>} />
     </Routes>

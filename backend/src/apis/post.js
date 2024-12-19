@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
 
-const exploreController = require('../controllers/ExploreController')
+const postController = require('../controllers/PostController')
 //const { validate, sanitizeInput } = require('../middlewares/login/validate')
 
 router.use(express.json())
 // router.use('/', loginController.get)
-router.use('/post', exploreController.getAllPost)
-router.use('/create', exploreController.create)
+router.use('/posts', postController.getAllPost)
+router.use('/create', postController.create)
 
 module.exports = router
