@@ -12,7 +12,7 @@ const MessagePage = () => {
        <SelectedUserProvider>
         <Grid2 container sx={{height: "100vh"}}>
         <Grid2 size={3} >
-            <SideBar/>
+            <SideBar isOpened/>
         </Grid2>
 
         <Grid2 size={6}>

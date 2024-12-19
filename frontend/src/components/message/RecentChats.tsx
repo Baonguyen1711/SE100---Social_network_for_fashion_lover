@@ -89,9 +89,6 @@ const SideBar = () => {
     const fetchData = async () => {
       const url = `http://127.0.0.1:5000/api/v1/message/recent?email=${email}`
       try {
-
-
-
         const response = await fetch(url, {
           method: "GET"
         })
@@ -99,8 +96,7 @@ const SideBar = () => {
         if (!response.ok) {
           throw new Error(`Error in getting message`);
         }
-
-
+        console.log(url);
         const data = await response.json()
         const recentMessages = data.recentMessages
         setRecentChats(recentMessages)

@@ -44,7 +44,6 @@ const MainMessage = () => {
         content: null
     }
 
-
     return (
         <Box
             component="div"
@@ -53,10 +52,7 @@ const MainMessage = () => {
             height="100vh"
         >
             <MessageHeader/>
-            <MessageDisplay messages={messages}/>
-            <MessageInput  recipent={selectedUser}  />
         </Box>
-
 
     )
 
