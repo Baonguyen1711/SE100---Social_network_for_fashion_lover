@@ -12,6 +12,7 @@ import { SocketProvider } from "./components/message/SocketContext";
 import { BackgroundProvider } from './components/message/BackgroundContext';
 import ExplorePage from './pages/explore/ExplorePage';
 import ProfilePage from './pages/profile/ProfilePage';
+import HomePage from './pages/home/HomePage';
 
 const App = () => {
   return (
@@ -24,10 +25,10 @@ const App = () => {
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/message/:userEmail?" element={<MessagePage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/home" element={<HomePage />} />
           </Routes>
         </BackgroundProvider>
       </SocketProvider>
-
     </ThemeProvider>
 
   );
