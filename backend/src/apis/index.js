@@ -7,6 +7,7 @@ const followEndPoint = require('./follow')
 const postUserEndPoint = require('./postuser')
 const commentEndPoint = require('./comment')
 const likeEndPoint = require('./like')
+const userEndPoint = require('./user')
 
 function api(app) {
 
@@ -22,6 +23,7 @@ function api(app) {
     app.use('/api/v1/postuser',postUserEndPoint)
     app.use('/api/v1/like',likeEndPoint)
     app.use('/api/v1/comment',commentEndPoint)
+    app.use('/api/v1/user', userEndPoint)
 }
 
 module.exports = api

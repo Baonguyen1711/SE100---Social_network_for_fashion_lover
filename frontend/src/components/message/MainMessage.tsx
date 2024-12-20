@@ -10,6 +10,7 @@ import { MessageComponentType } from '../../types'
 import { Recipent } from '../../types';
 import { useSelectedUser } from './SelectedUserContext'
 import { useSocket } from './SocketContext'
+import { useParams } from 'react-router-dom'
 
 interface MessageComponentArray {
     messages: MessageComponentType[]
@@ -18,9 +19,9 @@ interface MessageComponentArray {
 interface MessageInputProps {
     recipent: Recipent
     onSendMessage: (content: string) => void
-  }
+}
 
-  
+
 const selectedUser = {
     senderId: "123",
     recipentId: "456",
@@ -32,28 +33,30 @@ const messages = [
 ]
 
 const MainMessage = () => {
+    const selectedUserEmail = useParams().userEmail
+    //const [selectedUserEmail, setSelectedUserEmail] = useState<string>("")
 
     //const [messages, setMessages] = useState<MessageComponentType[]>([])
-    const {messages,setMessages} = useSocket()
-    const [isSender, setIsSender] = useState<boolean|undefined>(undefined)
+    //const {messages,setMessages} = useSocket()
+    const [isSender, setIsSender] = useState<boolean | undefined>(undefined)
     const currentEmail = localStorage.getItem("email")
-    const {selectedUserEmail} = useSelectedUser()
-    const selectedUser:Recipent = {
-        senderEmail: currentEmail,
-        recipentEmail: selectedUserEmail,
+    
+    
+    //console.log("selectedUserEmails", selectedUserEmails)
+    //const { selectedUserEmail, setSelectedUserEmail } = useSelectedUser()
+    const selectedUser: Recipent = {
+        senderEmail: currentEmail ,
+        recipentEmail: selectedUserEmail || null,
         content: null
     }
 
-    return (
-        <Box
-            component="div"
-            display="flex"
-            flexDirection="column"
-            height="100vh"
-        >
-            <MessageHeader/>
-        </Box>
 
+    return (
+        <>
+            <MessageHeader />
+            <MessageDisplay isChatbot={false} />
+            <MessageInput recipent={selectedUser} />
+        </>
     )
 
 }
