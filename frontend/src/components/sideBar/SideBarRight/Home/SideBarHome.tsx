@@ -40,11 +40,12 @@ const SideBarHome = () => {
     fetchData(); // Call fetchData inside useEffect
   }, []);
   return (
-    <div
-      className={clsx(style.container)}
-      style={{ position: "fixed", top: 0 }}
-    >
-      <SearchBar placeHolderString="Search for friend" />
+    // <div
+    //   className={clsx(style.container)}
+    //   style={{ position: "fixed", top: 0 }}
+    // >
+    <>
+     <SearchBar placeHolderString="Search for friend" />
       <div className={clsx(style.recent_chats_box)}>
         <h1 className={clsx(style.title)}>Recent Chats</h1>
         <RecentChatsList chatsList={chatsList}/>
@@ -59,7 +60,9 @@ const SideBarHome = () => {
         </div>
         <CardUpCommingEvent/> 
       </div>
-    </div>
+    </>
+     
+    // </div>
   )
 }
 
