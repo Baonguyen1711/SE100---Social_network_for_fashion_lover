@@ -20,6 +20,7 @@ export interface User {
     content: string;
     timeStamp: string;
     isSender: boolean | undefined;
+    image?: string
   }
   
   export interface RecentChat {
@@ -44,7 +45,7 @@ export interface User {
     content: string;
     timeStamp: string;
     isSender: boolean | undefined;
-    isChatbot: boolean | undefined;
+
   }
   
   export interface RecentChat {

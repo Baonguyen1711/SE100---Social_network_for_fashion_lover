@@ -1,29 +1,54 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Avatar, Typography } from '@mui/material'
 import { MoreHorizOutlined } from '@mui/icons-material'
 import { useSelectedUser } from './SelectedUserContext'
+import { lightTheme } from '../../themes/theme';
+import { useParams } from 'react-router-dom';
 
 
 
 
-const MessageHeader = ({
-    avatar = "https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/451270082_1185848232626306_1812262998793060985_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHdJebdYHUi0wsO5KaqLPeU2uvA1eVodLva68DV5Wh0u94hVLxba4_kQMK5Mhgj0BuGsXqmAtmjjHRGmA1p5JGn&_nc_ohc=9Szq1y4W8jwQ7kNvgH1AzSG&_nc_zt=23&_nc_ht=scontent.fsgn5-15.fna&_nc_gid=ACEIKB0LvyBwojOEobxQWMk&oh=00_AYD8MKeqA3DI7E2FGEDTCf8ImrJMIk4rSJCD9EMz698Vog&oe=67250BA8"
-}) => {
+const MessageHeader = () => {
 
-    const { selectedUserEmail } = useSelectedUser()
-    const name = localStorage.getItem("email")  
+    const selectedUserEmail = useParams().userEmail
+    const [selectedUserAvatar, setSelectedUserAvatar] = useState<string>("")
+    const [selectedUserName, setSelectedUserName] = useState<string>("")
+    useEffect(() => {
+        const fetchData = async () => {
+            debugger;
+            const url = `http://localhost:5000/api/v1/user/info?email=${selectedUserEmail}`;
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                });
+                if (!response.ok) {
+                    throw new Error("Error in getting user");
+                }
+                const data = await response.json();
+                setSelectedUserAvatar(data.userInfo.avatar)
+                setSelectedUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`)
+            } catch (e) {
+                console.error("Error fetching data:", e);
+            }
+        };
+
+        fetchData(); // Call fetchData inside useEffect
+    }, [selectedUserEmail]);
+
+    const defaultImage = "https://scontent.fsgn10-2.fna.fbcdn.net/v/t39.30808-6/457503675_1305139990895461_5989238482320814287_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeGVvv-t8mWiLqlRAsrDSp7q2KbV8EffU1rYptXwR99TWk-5kG5KZ1c_G-QAsF78iVsPKz3ERlEu6zLS54hMCZ8d&_nc_ohc=YycugprJMSwQ7kNvgGu6Kax&_nc_zt=23&_nc_ht=scontent.fsgn10-2.fna&_nc_gid=AV_7ObvLjjw1iClNw_CYx6G&oh=00_AYCLqFGuwcMY6ke2d4kJUsc2b8mSahQWFFvta5gS3V0Pyw&oe=672D212E"
+    const name = localStorage.getItem("email")
     return (
 
         <Box
             component="div"
             id="messageHeader"
             height="80px"
-            bgcolor="#ffffff"
+            bgcolor={lightTheme.colors.background}
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            marginLeft="2px"
-            borderRadius="0px 10px"
+            //marginLeft="2px"
+            //borderRadius="0px 10px"
             sx={{
                 boxShadow: "0px 2px 10px -5px rgba(0, 0, 0, 0.2)"
             }}
@@ -36,8 +61,21 @@ const MessageHeader = ({
                 height="100%"
                 justifyContent="space-between"
             >
-                <Avatar src={avatar} sx={{ height: "100%", width: "80px", marginRight: "10px", marginLeft: "10px" }} />
-                <Typography variant="h6" alignContent="center" color="#A1A7B3">{selectedUserEmail}</Typography>
+                {
+                    selectedUserEmail ?
+                        <Avatar src={selectedUserAvatar} sx={{ alignSelf: "center", marginRight: "10px", marginLeft: "20px", borderRadius: "50% " }} />
+                        :
+                        null
+                }
+                <Box
+                    component="div"
+                    display="flex"
+                    flexDirection="column"
+                >
+                    <Typography variant="h6" alignContent="center" color={lightTheme.colors.text}>{selectedUserEmail ? selectedUserName : null}</Typography>
+                    <Typography variant="caption" alignContent="center" color={lightTheme.colors.text}>{selectedUserEmail ? selectedUserEmail : null}</Typography>
+
+                </Box>
             </Box>
 
             <MoreHorizOutlined sx={{
