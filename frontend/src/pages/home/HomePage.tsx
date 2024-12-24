@@ -23,9 +23,7 @@ const HomePage: React.FC = () => {
 
             {/* Right Sidebar */}
             <Grid item xs={12} sm={2} md={2} sx={{ backgroundColor: '#f9f9f9', padding: '20px', display: { xs: 'none', md: 'block' } }}>
-                <SideBarHome />
-                <NotFollowContainer />
-                <CardUpCommingEvent />
+                <RightSidebar />
             </Grid>
         </Grid>
     );
