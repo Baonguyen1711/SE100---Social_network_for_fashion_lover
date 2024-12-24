@@ -1,33 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SideBar from '../../components/sideBar/SideBar'
 import RecentChats from '../../components/message/RecentChats'
 import MainMessage from '../../components/message/MainMessage'
-import { SelectedUserProvider} from '../../components/message/SelectedUserContext'
-import { SocketProvider} from '../../components/message/SocketContext'
-import { Grid2 } from '@mui/material'
+import Header from '../../components/layout/Header'
+//import Palette from '../../components/palette/Palette'
+import { lightTheme } from '../../themes/theme'
+import PublicLayout from '../../Layout'
+
+import { SelectedUserProvider } from '../../components/message/SelectedUserContext'
+import { SocketProvider } from '../../components/message/SocketContext'
+import { BackgroundProvider, useBackground } from '../../components/message/BackgroundContext'
+import { Grid2, ToggleButton, Box,Divider } from '@mui/material'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@mui/icons-material'
 
 const MessagePage = () => {
+  //const { backgroundImageOver } = useBackground();
   return (
-    <SocketProvider>
-       <SelectedUserProvider>
-        <Grid2 container sx={{height: "100vh"}}>
-        <Grid2 size={3} >
-            <SideBar isOpened/>
-        </Grid2>
+    <BackgroundProvider>
+      <SocketProvider>
+        <SelectedUserProvider>
+          <PublicLayout 
+            mainContent={<MainMessage/>}  
+            recentChatsContent={<RecentChats/>}
+            //extraContent={<Palette imgSrc={backgroundImageOver} />}
+          />
+          {/* <MessagePageContent /> */}
+        </SelectedUserProvider>
+      </SocketProvider>
+    </BackgroundProvider>
+  );
+};
 
-        <Grid2 size={6}>
-            <MainMessage/>
-        </Grid2>
-
-        <Grid2 size={3}>
-            <RecentChats/>
-        </Grid2>
-    </Grid2>
-    </SelectedUserProvider>
-    </SocketProvider>
-   
-    
-  )
-}
-
-export default MessagePage
+export default MessagePage;

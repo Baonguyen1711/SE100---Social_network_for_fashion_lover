@@ -1,9 +1,9 @@
 //const User = require("../models/user")
 
-const Pet = require("../models/Pet")
+//const Pet = require("../models/Pet")
 const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
-const User = require('../models/user')
+const User = require('../models/User')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');//
 const connectToDb = require("../config/database/db");
@@ -12,6 +12,27 @@ mongoose.set("debug", true);
 class UserController {
 
     //[GET] user info
+
+    async getAll(req, res) {
+      await connectToDb()
+      const userInfo = await User.find({},{avatar:1, location:1, firstname:1, lastname:1})
+
+      const formattedUserInfo = userInfo.map(user => {
+        const { firstname, lastname, ...rest } = user.toObject(); // Destructure to exclude firstname and lastname
+        return {
+          ...rest, // Spread the remaining fields
+          fullName: `${firstname} ${lastname}`, // Combine names into fullName
+        };
+      });
+
+      try {
+          if (formattedUserInfo) {
+              return res.json(formattedUserInfo)
+          } 
+      } catch (e) {
+          console.log('Some errors happen', e)
+      }
+  }
     async getInfo(req, res) {
         await connectToDb()
         const { email } = req.query
@@ -59,7 +80,7 @@ class UserController {
         return res.status(400).send({ error: 'Invalid userId format',userId });
     }
       await connectToDb();
-      const user = await User.findOne({ _id: new ObjectId(`${userId}`) },{avatar:1,description:1,firstname:1,lastname:1,location:1});
+      const user = await User.findOne({ _id: new ObjectId(`${userId}`) },{avatar:1,description:1,firstname:1,lastname:1,location:1, email:1});
       if (user) {
         const petCount = await Pet.countDocuments({userId:new ObjectId(`${userId}`),isDeleted:false})
         const result ={
