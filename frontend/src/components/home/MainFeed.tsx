@@ -1,150 +1,172 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography, TextField, Button, Card, CardContent, CardMedia, Avatar, Grid, IconButton } from '@mui/material';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
+import React, { useState, useEffect } from "react";
+import {
+    Box,
+    ImageList,
+    ImageListItem,
+    Modal,
+    TextField,
+    Button,
+    Avatar,
+    Typography,
+    IconButton,
+} from "@mui/material";
+import { ThumbUp, Comment, Share } from "@mui/icons-material";
+import { PostResponse, Post } from "../../types";
+import DetailPostHomeModal from "./DetailPostHomeModal";
+import style from "./css/MainFeed.module.css";
 
-interface Post {
-    id: string;
-    title: string;
-    content: string;
-    images: string[];
-    createdAt: string;
-}
+const MainFeed = () => {
+    const [posts, setPosts] = useState<Post[]>([]); // Danh sách bài viết
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null); // Bài viết được chọn để xem chi tiết
+    const [newPostContent, setNewPostContent] = useState<string>(""); // Nội dung bài viết mới
+    const [loading, setLoading] = useState<boolean>(false); // Trạng thái đang tải
 
-const MainFeed: React.FC = () => {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [page, setPage] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(false);
+    // Fetch bài viết từ API
+    useEffect(() => {
+        const fetchPosts = async () => {
+            setLoading(true);
+            const userId = localStorage.getItem("userId");
+            const url = `http://localhost:5000/api/v1/post/posts?userId=${userId}`;
 
-    // Fetch posts from the API
-    const fetchPosts = async () => {
-        if (loading) return; // Tránh gọi API nhiều lần khi đang tải
-        setLoading(true);
-        try {
-            const response = await fetch(`/api/posts?page=${page}&limit=10`);
-            const data = await response.json();
+            try {
+                const response = await fetch(url, { method: "GET" });
+                if (!response.ok) {
+                    throw new Error(`Error fetching posts: ${response.status}`);
+                }
 
-            console.log("Fetched data:", data); // Log để kiểm tra
-
-            // Duyệt mảng từ `recommentPost`
-            if (data.recommentPost && Array.isArray(data.recommentPost)) {
-                setPosts((prevPosts) => [...prevPosts, ...data.recommentPost]); // Append bài viết
-            } else {
-                console.error("Unexpected response format:", data);
+                const data: PostResponse = await response.json();
+                if (Array.isArray(data.recommentPost) && data.recommentPost.length > 0) {
+                    setPosts(data.recommentPost); // Gán bài viết
+                } else {
+                    console.log("No posts found");
+                }
+            } catch (error) {
+                console.error("Error fetching posts:", error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Error fetching posts:", error);
-        } finally {
-            setLoading(false);
-        }
+        };
+
+        fetchPosts();
+    }, []);
+
+    // Xử lý nhấp vào bài viết
+    const handlePostClick = (post: Post) => {
+        setSelectedPost(post); // Mở modal với bài viết được chọn
     };
 
-    // Fetch posts when the component mounts or when the page changes
-    useEffect(() => {
-        fetchPosts();
-    }, [page]);
+    // Đóng modal chi tiết bài viết
+    const handleCloseModal = () => {
+        setSelectedPost(null);
+    };
 
-    // Handle scroll event to load more posts when near the bottom
-    const handleScroll = (event: React.UIEvent<HTMLElement>) => {
-        const target = event.target as HTMLElement; // Cast event.target to HTMLElement
-        const bottom = target.scrollHeight === target.scrollTop + target.clientHeight;
-        if (bottom && !loading) {
-            setPage((prevPage) => prevPage + 1); // Load more posts when scrolling to the bottom
+    // Xử lý tạo bài đăng mới
+    const handleCreatePost = async () => {
+        if (!newPostContent.trim()) return;
+
+        const userId = localStorage.getItem("userId");
+        const url = `http://localhost:5000/api/v1/post/create`;
+        const newPost = {
+            userId,
+            content: newPostContent,
+            images: [], // Bạn có thể thêm xử lý để upload hình ảnh
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newPost),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error creating post: ${response.status}`);
+            }
+
+            const createdPost = await response.json();
+            setPosts((prevPosts) => [createdPost, ...prevPosts]); // Thêm bài đăng vào danh sách
+            setNewPostContent(""); // Xóa nội dung sau khi đăng
+        } catch (error) {
+            console.error("Error creating post:", error);
         }
     };
 
     return (
-        <Box sx={{ backgroundColor: '#CBD9C4', padding: '20px', overflowY: 'auto' }} onScroll={handleScroll}>
-            {/* Post Input */}
-            <Box sx={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-                    <Avatar
-                        src=""
-                        sx={{ height: '50px', width: '50px', marginRight: '10px' }}
-                    />
-                    <TextField
-                        fullWidth
-                        placeholder="Share something..."
-                        variant="outlined"
-                        sx={{ borderRadius: '50px', marginRight: '10px' }}
-                    />
-                    <Button variant="contained" sx={{ textTransform: 'none', backgroundColor: '#5f9c6e' }}>Post</Button>
+        <Box sx={{ backgroundColor: '#CBD9C4', padding: '20px', overflowY: 'auto' }}>
+            <Box sx={{ width: "100%", height: "100%", overflowY: "scroll", padding: "16px" }}>
+                {/* Khu vực để tạo bài đăng */}
+                <Box sx={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px', marginRight: '25px' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                        <Avatar
+                            src=""
+                            sx={{ height: '50px', width: '50px', marginRight: '10px' }}
+                        />
+                        <TextField
+                            fullWidth
+                            placeholder="Share something..."
+                            variant="outlined"
+                            sx={{ borderRadius: '50px', marginRight: '10px' }}
+                        />
+                        <Button variant="contained" sx={{ textTransform: 'none', backgroundColor: '#5f9c6e' }}>Post</Button>
+                    </Box>
+                    <Box sx={{ display: 'flex', marginTop: '10px' }}>
+                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Live Video</Button>
+                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Photos</Button>
+                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Feeling</Button>
+                    </Box>
                 </Box>
-                <Box sx={{ display: 'flex', marginTop: '10px' }}>
-                    <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Live Video</Button>
-                    <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Photos</Button>
-                    <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Feeling</Button>
-                </Box>
-            </Box>
 
-            {/* Posts */}
-            {posts.map((post) => (
-                <Card key={post.id} sx={{ backgroundColor: 'white', borderRadius: '10px', marginBottom: '20px', padding: '20px' }}>
-                    <CardContent>
-                        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                            <Avatar sx={{ height: '50px', width: '50px', marginRight: '10px' }}>{post.title.charAt(0)}</Avatar>
-                            <Box>
-                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>{post.title}</Typography>
-                                <Typography variant="body2" sx={{ color: 'gray' }}>{new Date(post.createdAt).toLocaleDateString()}</Typography>
-                            </Box>
-                        </Box>
+                {/* Hiển thị danh sách bài viết */}
+                <ImageList variant="masonry" cols={2} gap={16}>
+                    {posts.length > 0 ? (
+                        posts.map((post) => (
+                            <ImageListItem
+                                key={post._id}
+                                className={style.imageItem}
+                                onClick={() => handlePostClick(post)}
+                            >
+                                <img
+                                    src={post.images[0] || "/default-image.jpg"} // Sử dụng hình mặc định nếu không có ảnh
+                                    alt={post.content}
+                                    loading="lazy"
+                                    className={style.image}
+                                />
+                                <div className={style.overlay}>
+                                    <Typography variant="h6">{post.title}</Typography>
+                                </div>
+                            </ImageListItem>
+                        ))
+                    ) : (
+                        <Typography>No posts available</Typography>
+                    )}
+                </ImageList>
 
-                        <Typography variant="body1" sx={{ marginBottom: '20px' }}>{post.content}</Typography>
-
-                        <Grid container spacing={2} sx={{ marginBottom: '20px' }}>
-                            {post.images.map((image, index) => (
-                                <Grid item xs={4} key={index}>
-                                    <CardMedia
-                                        component="img"
-                                        image={image}
-                                        alt={`Post Image ${index + 1}`}
-                                        sx={{ borderRadius: '10px' }}
-                                    />
-                                </Grid>
-                            ))}
-                        </Grid>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <IconButton>
-                                    <FavoriteBorderIcon />
-                                </IconButton>
-                                <Typography variant="body2">340 Likes</Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <IconButton>
-                                    <ChatBubbleOutlineIcon />
-                                </IconButton>
-                                <Typography variant="body2">13 Comments</Typography>
-                            </Box>
-                            <IconButton>
-                                <ShareIcon />
-                            </IconButton>
-                        </Box>
-                    </CardContent>
-                </Card>
-            ))}
-
-            {/* Loading Spinner */}
-            {loading && (
-                <Box sx={{ textAlign: 'center', marginTop: '20px' }}>
-                    <Typography>Loading...</Typography>
-                </Box>
-            )}
-
-            {/* Comment Section */}
-            <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: 'white', padding: '10px', borderRadius: '10px' }}>
-                <Avatar
-                    src=""
-                    sx={{ height: '40px', width: '40px', marginRight: '10px' }}
-                />
-                <TextField
-                    fullWidth
-                    placeholder="Write a comment..."
-                    variant="outlined"
-                    sx={{ borderRadius: '50px' }}
-                />
+                {/* Modal chi tiết bài viết */}
+                <Modal
+                    open={!!selectedPost}
+                    onClose={handleCloseModal}
+                    sx={{ backdropFilter: "blur(2px)" }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            bgcolor: "background.paper",
+                            outline: "none",
+                            boxShadow: 24,
+                            borderRadius: "8px",
+                            width: "80%",
+                            maxHeight: "90%",
+                            overflowY: "auto",
+                            padding: "16px",
+                        }}
+                    >
+                        {selectedPost && <DetailPostHomeModal post={selectedPost} onClose={handleCloseModal} />}
+                    </Box>
+                </Modal>
             </Box>
         </Box>
     );
