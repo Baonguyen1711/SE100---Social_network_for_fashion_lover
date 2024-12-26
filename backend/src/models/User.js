@@ -37,6 +37,9 @@ const UserSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date
+    },
+    description: {
+        type:String
     }
 })
 
