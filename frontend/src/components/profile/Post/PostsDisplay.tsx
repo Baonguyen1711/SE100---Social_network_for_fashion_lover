@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 import style from "./css/PostsDisplay.module.css";
 import PostToolDisplay from "./PostToolDisplay";
-import { Like, Post, User } from "../../../types";
+import { Like, Post, User, PostResponse } from "../../../types";
 import { PostProvider } from "./PostContext";
 import PostRequestBar from "./PostRequestBar";
 import { AccessUrlContext } from "../User/AccessUrlContext";
@@ -41,6 +41,30 @@ const PostsDisplay = () => {
     const toggleDisplayToolBox = () => {
         setIsDisplayTool((prev) => !prev);
     };
+    const [selectedImage, setSelectedImage] = useState<Post | null>(null);
+
+
+    const fetchData = async () => {
+        const userId = localStorage.getItem("user_id")
+        const url = `http://localhost:5000/api/v1/post/posts?userId=${userId}`;
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+            });
+            if (!response.ok) {
+                throw new Error("Error in getting message");
+            }
+            const data: PostResponse = await response.json();
+            if (data.recommentPost.length > 0) {
+                setPostsData(data.recommentPost);
+                console.log("abcdefghj", data.recommentPost)
+            } else {
+                console.log("No posts found");
+            }
+        } catch (e) {
+            console.error("Error fetching data:", e);
+        }
+    };
 
     const updatePostsState = async () => {
         try {
@@ -49,24 +73,31 @@ const PostsDisplay = () => {
             console.error("Error updating post state:", error);
         }
     };
+    // useEffect(() => {
+    //     fetchData(); // Call fetchData inside useEffect
+    // }, [url]);
+    // const fetchData = async () => {
+    //     if (!url) return;
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: "GET",
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error("Error in getting message");
+    //         }
+    //         const data = await response.json();
+    //         setPostsData(data.posts);
+    //         setUser(data.user);
+    //     } catch (e) {
+    //         console.error("Error fetching data:", e);
+    //     }
+    // };
     useEffect(() => {
         fetchData(); // Call fetchData inside useEffect
-    }, [url]);
-    const fetchData = async () => {
-        if (!url) return;
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-            });
-            if (!response.ok) {
-                throw new Error("Error in getting message");
-            }
-            const data = await response.json();
-            setPostsData(data.posts);
-            setUser(data.user);
-        } catch (e) {
-            console.error("Error fetching data:", e);
-        }
+    }, [selectedImage]);
+
+    const handleImageClick = (image: Post) => {
+        setSelectedImage(image);
     };
     // const handleHide = () => {
     //   console.log("Hide clicked");
