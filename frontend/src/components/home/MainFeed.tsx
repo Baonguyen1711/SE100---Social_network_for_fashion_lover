@@ -14,19 +14,70 @@ import { ThumbUp, Comment, Share } from "@mui/icons-material";
 import { PostResponse, Post } from "../../types";
 import DetailPostHomeModal from "./DetailPostHomeModal";
 import style from "./css/MainFeed.module.css";
+import { useLocation } from 'react-router-dom';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
-const MainFeed = () => {
+interface MainFeedProps {
+    isOpened?: boolean;
+}
+
+const MainFeed: React.FC<MainFeedProps> = ({ isOpened = true }) => {
     const [posts, setPosts] = useState<Post[]>([]); // Danh sách bài viết
     const [selectedPost, setSelectedPost] = useState<Post | null>(null); // Bài viết được chọn để xem chi tiết
     const [newPostContent, setNewPostContent] = useState<string>(""); // Nội dung bài viết mới
     const [loading, setLoading] = useState<boolean>(false); // Trạng thái đang tải
+    const location = useLocation()
+
+    const isActive = (path: string) => location.pathname.split("/")[1] === path;
+    //const {selectedUserAvatar, selectedUserName, selectedUserEmail} = useSelectedUser()
+    const [userName, setUserName] = useState<string>("")
+    const [userAvatar, setUserAvatar] = useState<string>("")
+    console.log(location.pathname.split("/")[1])
+    const currentEmail = localStorage.getItem("email")
+
+
 
     // Fetch bài viết từ API
     useEffect(() => {
+        const getUserInfo = async () => {
+
+            try {
+                const url = `http://localhost:5000/api/v1/user/info?email=${currentEmail}`
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Error in getting message`);
+                }
+
+
+
+                const data = await response.json()
+                debugger;
+                //console.log("user data", data)
+                setUserAvatar(data.userInfo.avatar)
+                setUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`)
+
+                console.log(userAvatar)
+                console.log(userName)
+            } catch (e) {
+                console.log("Some errors happen", e)
+            }
+
+        }
+
+        getUserInfo();
+
         const fetchPosts = async () => {
             setLoading(true);
             const userId = localStorage.getItem("userId");
-            const url = `http://localhost:5000/api/v1/post/posts?userId=${userId}`;
+            const url = `http://localhost:5000/api/v1/post/posts/home`;
 
             try {
                 const response = await fetch(url, { method: "GET" });
@@ -48,7 +99,9 @@ const MainFeed = () => {
         };
 
         fetchPosts();
+
     }, []);
+
 
     // Xử lý nhấp vào bài viết
     const handlePostClick = (post: Post) => {
@@ -98,7 +151,7 @@ const MainFeed = () => {
                 <Box sx={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px', marginBottom: '20px', marginRight: '25px' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                         <Avatar
-                            src=""
+                            src={userAvatar}
                             sx={{ height: '50px', width: '50px', marginRight: '10px' }}
                         />
                         <TextField
@@ -110,9 +163,8 @@ const MainFeed = () => {
                         <Button variant="contained" sx={{ textTransform: 'none', backgroundColor: '#5f9c6e' }}>Post</Button>
                     </Box>
                     <Box sx={{ display: 'flex', marginTop: '10px' }}>
-                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Live Video</Button>
-                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Photos</Button>
-                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}>Feeling</Button>
+                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}><VideoCallIcon></VideoCallIcon> Video</Button>
+                        <Button variant="outlined" sx={{ textTransform: 'none', marginRight: '10px' }}><AddPhotoAlternateIcon></AddPhotoAlternateIcon>Photos</Button>
                     </Box>
                 </Box>
 
