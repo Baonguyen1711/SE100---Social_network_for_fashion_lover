@@ -47,6 +47,7 @@ import { SocketProvider } from '../../components/message/SocketContext'
 import { BackgroundProvider, useBackground } from '../../components/message/BackgroundContext'
 import { Grid2, ToggleButton, Box, Divider } from '@mui/material'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@mui/icons-material'
+import HomeForm from '../../components/home/HomeForm';
 
 const HomePage = () => {
     //const { backgroundImageOver } = useBackground();
@@ -55,7 +56,7 @@ const HomePage = () => {
             <SocketProvider>
                 <SelectedUserProvider>
                     <PublicLayout
-                        mainContent={<MainFeed />}
+                        mainContent={<HomeForm />}
                         recentChatsContent={
                             <>
                                 <SideBarHome />

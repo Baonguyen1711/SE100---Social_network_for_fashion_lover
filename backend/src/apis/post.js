@@ -8,5 +8,6 @@ router.use(express.json())
 // router.use('/', loginController.get)
 router.use('/posts', postController.getAllPost)
 router.use('/create', postController.create)
+router.use('/api/v1/post/getposthome/:userId', postController.getPostsByFollowedUsers)
 
 module.exports = router
