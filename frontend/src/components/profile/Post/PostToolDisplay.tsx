@@ -58,7 +58,7 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
         setIsChanged(true);
     };
     useEffect(() => {
-        const userId = localStorage.getItem('userId')
+        const userId = localStorage.getItem('user_id')
         const fetchData = async () => {
             const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
             try {
@@ -123,26 +123,26 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                 ...fields,
                 images: [uploadedImageUrl], // Update the images field
             }));
-            response = await fetch("http://localhost:5000/api/v1/post/create", {
+            response = await fetch("http://localhost:5000/api/v1/post/posts/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    userId: localStorage.getItem("userId"),
+                    userId: localStorage.getItem("user_id"),
                     title: fields.title,
                     content: fields.content,
                     imgUrl: uploadedImageUrl,
                 }),
             });
         } else {
-            response = await fetch("http://localhost:5000/api/v1/post/create", {
+            response = await fetch("http://localhost:5000/api/v1/post/posts/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    userId: localStorage.getItem("userId"),
+                    userId: localStorage.getItem("user_id"),
                     title: fields.title,
                     content: fields.content,
                 }),

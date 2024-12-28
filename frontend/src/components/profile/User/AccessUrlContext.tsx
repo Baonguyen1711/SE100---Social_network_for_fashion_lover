@@ -18,7 +18,7 @@ export const AccessUrlProvider: React.FC<{ children: ReactNode; type: String, Ta
         if (type === "profile") {
             url = `http://localhost:5000/api/v1/post/getpostsbyuserid?targetId=${TargetUserId}&userAccessId=${userId}`;
         } else {
-            url = `http://localhost:5000/api/v1/post/getposthome/${userId}`;
+            url = `http://localhost:5000/api/v1/post/posts/getposthome/${userId}`;
         }
         setUrl(url)
     }, [userId])

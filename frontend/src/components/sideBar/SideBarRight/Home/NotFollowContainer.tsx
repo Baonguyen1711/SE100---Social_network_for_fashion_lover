@@ -7,9 +7,11 @@ import CardMightLikeBox from "./CardMightLikeBox";
 const NotFollowContainer = () => {
   const [notFollowList, setNotFollowList] = useState<User[]>();
   useEffect(() => {
-  const currentEmail = localStorage.getItem("email");
+    const currentEmail = localStorage.getItem("email");
+    const currentId = localStorage.getItem("user_id");
     const fetchData = async () => {
-      const url = `http://localhost:5000/api/v1/follow/recommentfollow?followerEmail=${currentEmail}`;
+      // const url = `http://localhost:5000/api/v1/follow/recommentfollow?followerEmail=${currentEmail}`;
+      const url = `http://localhost:5000/api/v1/follow/recommentfollow?followerId=${currentId}`;
 
       try {
         const response = await fetch(url, {

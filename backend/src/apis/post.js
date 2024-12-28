@@ -8,6 +8,11 @@ router.use(express.json())
 // router.use('/', loginController.get)
 router.use('/posts', postController.getAllPost)
 router.use('/create', postController.create)
-router.use('/api/v1/post/getposthome/:userId', postController.getPostsByFollowedUsers)
+router.use('/getposthome/:userId', postController.getPostsByFollowedUsers)
+router.use('/delete', postController.deletePostById)
+router.use('/getpostbypostid', postController.getPostById)
+router.use('/updatepost', postController.updateTitleAndContentAndImagesPostByPostId)
+
+router.use('/favourited/getbyuserid', postController.getFavouritedPostsByUserId)
 
 module.exports = router
