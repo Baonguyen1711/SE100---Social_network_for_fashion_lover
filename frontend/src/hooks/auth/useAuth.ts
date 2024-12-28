@@ -15,9 +15,11 @@ const useAuth = () => {
 
             const data = await response.json()
             const jwt = data.jwt
+            const userId = data.user_id
             console.log(data)
             
             localStorage.setItem("jwt", jwt)
+            localStorage.setItem("user_id", userId)
 
             
             console.log("login success")
