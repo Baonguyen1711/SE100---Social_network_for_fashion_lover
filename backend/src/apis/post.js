@@ -7,7 +7,8 @@ const postController = require('../controllers/PostController')
 router.use(express.json())
 // router.use('/', loginController.get)
 router.use('/posts', postController.getAllPost)
-router.use('/create', postController.create)
-router.use('/api/v1/post/getposthome/:userId', postController.getPostsByFollowedUsers)
+router.post('/create', postController.create)
+router.get('/getposthome', postController.getPostsByFollowedUsers)
+router.delete('/delete', postController.deletePostById)
 
 module.exports = router

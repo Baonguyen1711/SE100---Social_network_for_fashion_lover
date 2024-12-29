@@ -10,7 +10,7 @@ router.use('/create', followController.createFollow)
 router.use('/ignore', followController.createIgnore)
 
 // router.use('/recommendfollow', followController.recommendFollows)
-router.use('/recommentfollow', followController.getNotFollows)
+router.get('/recommentfollow', followController.getNotFollows)
 module.exports = router
 
 //           mutualFriendArray.push({

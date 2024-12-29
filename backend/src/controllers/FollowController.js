@@ -55,18 +55,17 @@ class FollowController {
     }
   }
 
-  async isFollowed(req,res)
-  {
+  async isFollowed(req, res) {
     try {
       const { followerId, followingId } = req.body;
-  
+
       // Kiểm tra input
       if (!followerId || !followingId) {
         return res
           .status(400)
           .json({ message: "Missing followerId or followingId" });
       }
-  
+
       // Kiểm tra định dạng ObjectId
       if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followingId)) {
         return res.status(400).json({
@@ -75,13 +74,13 @@ class FollowController {
           followingId,
         });
       }
-  
+
       // Tìm kiếm trong cơ sở dữ liệu
       const existingFollow = await Follow.findOne({
         followerId: new ObjectId(`${followerId}`),
         followingId: new ObjectId(`${followingId}`),
       });
-  
+
       // Trả về kết quả
       if (existingFollow) {
         return res.status(200).json({ isFollowed: true });
@@ -93,7 +92,7 @@ class FollowController {
       res.status(500).json({ message: "Error finding following user" });
     }
   }
-  
+
   async createIgnore(req, res) {
     console.log("Create example");
     try {
@@ -148,7 +147,7 @@ class FollowController {
   async getNotFollows(req, res) {
     try {
       connectToDb();
-      const { followerId } = req.params;
+      const { followerId } = req.query;
       if (!ObjectId.isValid(followerId)) {
         return res
           .status(400)
@@ -167,7 +166,7 @@ class FollowController {
         isIgnore: true,
       }).populate("followingId");
       // Lấy danh sách UserID của những người đã follow
-      const followingId= following.map((follow) => follow.followingId);
+      const followingId = following.map((follow) => follow.followingId);
       //Laysay danh sách UserID của ngững người đã ignore
       const ignoringId = ignoring.map((ignore) => ignore.followingId);
       // Bước 2: Lấy danh sách những người chưa follow (exclude người dùng hiện tại và những người đã follow)

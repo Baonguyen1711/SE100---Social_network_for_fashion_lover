@@ -7,40 +7,38 @@ import {
   TextareaAutosize,
   TextField,
 } from "@mui/material";
-import { PostComment,IComment ,Post, UserInfo, User } from "../../../types";
+import { PostComment, IComment, Post, UserInfo, User } from "../../../types";
 import { Share } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
 import { getUserByUserId } from "../../../sercives/api";
 
 interface Props {
-  postId:string|undefined|null
-  parentId?:string|undefined|null
-  onAddComment?: (newComment: IComment|undefined) => void
-  content?: string|null
+  postId: string | undefined | null
+  parentId?: string | undefined | null
+  onAddComment?: (newComment: IComment | undefined) => void
+  content?: string | null
 }
 const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
   const [fields, setFields] = useState<PostComment>({
     content: "",
-    postId: props.postId?props.postId:"",
+    postId: props.postId ? props.postId : "",
     userId: "",
-    parentId: props.parentId?props.parentId:"",
+    parentId: props.parentId ? props.parentId : "",
   });
   const [loading, setLoading] = useState(false);
-  const [currentUser,setCurrentUser] = useState<User>();
-  useEffect(()=>{
+  const [currentUser, setCurrentUser] = useState<User>();
+  useEffect(() => {
     fetchUserData()
-  },[])
+  }, [])
   //
-  const fetchUserData = async () => { 
-    const userId = localStorage.getItem("userId")
-    setCurrentUser(await getUserByUserId(userId))
+  const fetchUserData = async () => {
+    setCurrentUser(await getUserByUserId())
   };
   const handlePostComment = async () => {
-    if(fields.content==="") 
-    {
+    if (fields.content === "") {
       return;
     }
-    console.log("dsadsajasdskdajkdjsadkjs",fields)
+    console.log("dsadsajasdskdajkdjsadkjs", fields)
     //setLoading(true);
     try {
       const url = `http://localhost:5000/api/v1/comment/create`;
@@ -61,11 +59,11 @@ const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
         //console.log("dasdkajkasjdksdjasksajask",data.newComment)
         props.onAddComment?.(data.newComment)
         //console.log("Comment posted successfully");
-        setFields((prev)=>({ ...prev,content: "" }));
+        setFields((prev) => ({ ...prev, content: "" }));
       }
     } catch (e) {
       console.log("Error: ", e);
-    } 
+    }
   };
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target;

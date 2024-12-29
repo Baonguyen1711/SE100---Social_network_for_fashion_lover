@@ -20,8 +20,7 @@ const HomeForm = () => {
         fetchData(); // Call fetchData inside useEffect
     }, []);
     const fetchData = async () => {
-        const userId = localStorage.getItem("userId")
-        setUserData(await getUserByUserId(userId));
+        setUserData(await getUserByUserId());
     };
 
     const backgr = {
@@ -38,7 +37,7 @@ const HomeForm = () => {
     return (
         <div style={backgr} className={style.coverContainer}>
             <div className={style.bodyContainer}>
-                <AccessUrlProvider type="home" userId={localStorage.getItem("userId")}>
+                <AccessUrlProvider type="home" userId={localStorage.getItem("user_id")}>
                     <PostsDisplay />
                 </AccessUrlProvider>
             </div>

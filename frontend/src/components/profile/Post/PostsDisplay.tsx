@@ -27,7 +27,7 @@ import {
 } from "@mui/icons-material";
 import style from "./css/PostsDisplay.module.css";
 import PostToolDisplay from "./PostToolDisplay";
-import { Like, Post, User } from "../../../types";
+import { Like, Post, User, PostResponse } from "../../../types";
 import { PostProvider } from "./PostContext";
 import PostRequestBar from "./PostRequestBar";
 import { AccessUrlContext } from "../User/AccessUrlContext";
@@ -38,9 +38,13 @@ const PostsDisplay = () => {
     const [postsData, setPostsData] = useState<Post[]>([]);
     const [user, setUser] = useState<User>();
     const { url, setUrl } = useContext(AccessUrlContext)!;
+    const [userName, setUserName] = useState<string>("")
+    const [userAvatar, setUserAvatar] = useState<string>("")
+    const currentEmail = localStorage.getItem("email")
     const toggleDisplayToolBox = () => {
         setIsDisplayTool((prev) => !prev);
     };
+    const [selectedImage, setSelectedImage] = useState<Post | null>(null);
 
     const updatePostsState = async () => {
         try {
@@ -50,10 +54,44 @@ const PostsDisplay = () => {
         }
     };
     useEffect(() => {
-        fetchData(); // Call fetchData inside useEffect
+        fetchData();
+        const getUserInfo = async () => {
+
+            try {
+                const url = `http://127.0.0.1:5000/api/v1/user/info?email=${currentEmail}`
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Error in getting message`);
+                }
+
+
+
+                const data = await response.json()
+                debugger;
+                //console.log("user data", data)
+                setUserAvatar(data.userInfo.avatar)
+                setUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`)
+
+                console.log(userAvatar)
+                console.log(userName)
+            } catch (e) {
+                console.log("Some errors happen", e)
+            }
+
+        }
+
+        getUserInfo()
     }, [url]);
     const fetchData = async () => {
-        if (!url) return;
+        const userId = localStorage.getItem("user_id")
+        const url = `http://localhost:5000/api/v1/post/getposthome?userId=${userId}`;
         try {
             const response = await fetch(url, {
                 method: "GET",
@@ -61,16 +99,19 @@ const PostsDisplay = () => {
             if (!response.ok) {
                 throw new Error("Error in getting message");
             }
-            const data = await response.json();
-            setPostsData(data.posts);
-            setUser(data.user);
+            const data: PostResponse = await response.json();
+            console.log(data)
+            if (data.recommentPost.length > 0) {
+                setPostsData(data.recommentPost);
+                console.log("check log post", data.recommentPost)
+            } else {
+                console.log("No posts found");
+            }
         } catch (e) {
             console.error("Error fetching data:", e);
         }
     };
-    // const handleHide = () => {
-    //   console.log("Hide clicked");
-    // };
+
     return (
         <Box sx={{ width: "100", mx: "auto", mt: 4 }}>
             {/* Top post input area */}

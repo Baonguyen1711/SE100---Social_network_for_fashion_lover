@@ -39,7 +39,9 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [isChanged, setIsChanged] = useState(false);
     const [_message, setMessage] = useState(false);
-    const [userData, setUserData] = useState<User>()
+    const [userData, setUserData] = useState<User>();
+    const [userName, setUserName] = useState<string>("")
+    const [userAvatar, setUserAvatar] = useState<string>("")
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,9 +60,10 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
         setIsChanged(true);
     };
     useEffect(() => {
-        const userId = localStorage.getItem('userId')
+        const userId = localStorage.getItem('user_id')
+        const currentEmail = localStorage.getItem("email")
         const fetchData = async () => {
-            const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
+            const url = `http://127.0.0.1:5000/api/v1/user/info?email=${currentEmail}`
             try {
                 const response = await fetch(url, {
                     method: "GET",
@@ -69,7 +72,8 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                     throw new Error("Error in getting user");
                 }
                 const data = await response.json();
-                setUserData(data.user);
+                setUserAvatar(data.userInfo.avatar)
+                setUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`)
             } catch (e) {
                 console.error("Error fetching data:", e);
             }
@@ -129,7 +133,7 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    userId: localStorage.getItem("userId"),
+                    userId: localStorage.getItem("user_id"),
                     title: fields.title,
                     content: fields.content,
                     imgUrl: uploadedImageUrl,
@@ -142,7 +146,7 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    userId: localStorage.getItem("userId"),
+                    userId: localStorage.getItem("user_id"),
                     title: fields.title,
                     content: fields.content,
                 }),
@@ -212,9 +216,8 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                         sx={{ width: "100%", textAlign: "center" }}
                     >
                         <CardHeader
-                            title="Create Post"
-                            subheader="Some options for you"
-                            sx={{ bgcolor: "#f4f4f4", flexDirection: "col" }} // Bạn có thể tùy chỉnh thêm
+                            title="Create new Post"
+                            sx={{ bgcolor: "#f4f4f4", flexDirection: "col" }}
                         />
 
                         {/* Nội dung chính của modal */}
@@ -229,12 +232,12 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
                             }}
                         >
                             <Stack direction="row">
-                                <Avatar src={userData?.avatar}></Avatar>
+                                <Avatar src={userAvatar}></Avatar>
                                 <Typography
                                     variant="h5"
                                     sx={{ alignSelf: "center", marginLeft: "10px" }}
                                 >
-                                    {userData && userData.firstname + " " + userData.lastname}
+                                    {userName}
                                 </Typography>
                                 {/* <Typography variant="body1" sx={{ alignSelf: "center" }}>
                   đang cảm thấy

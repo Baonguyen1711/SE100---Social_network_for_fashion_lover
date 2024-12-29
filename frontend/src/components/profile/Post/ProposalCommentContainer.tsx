@@ -28,7 +28,7 @@ const ProposalCommentContainer: React.FC<props> = (props) => {
     }, [props.newComment]);
     const fetchData = async () => {
         const postId = props.postId;
-        const userId = localStorage.getItem("userId");
+        const userId = localStorage.getItem("user_id");
         const url = `http://localhost:5000/api/v1/comment/getCommentsByPostId?postId=${postId}&userId=${userId}`;
         try {
             const response = await fetch(url, {

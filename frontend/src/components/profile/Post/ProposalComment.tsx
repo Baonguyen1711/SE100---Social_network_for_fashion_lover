@@ -26,8 +26,8 @@ interface Props {
   comment: IComment | undefined;
   level: number; // cấp 1, cấp 2
   handleCommentParentClick?:
-    | ((user: UserInfo | null | undefined) => void)
-    | undefined;
+  | ((user: UserInfo | null | undefined) => void)
+  | undefined;
 }
 const Comment: React.FC<Props> = (props) => {
   const [currentComment, setCurrentComment] = useState(props.comment);
@@ -56,7 +56,7 @@ const Comment: React.FC<Props> = (props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: localStorage.getItem("userId"),
+            userId: localStorage.getItem("user_id"),
             targetId: props.comment?._id,
             targetType: "comment",
           }),
@@ -129,7 +129,7 @@ const Comment: React.FC<Props> = (props) => {
       props.comment?._id
     );
     if (response) {
-      console.log("contentdkjdashk",response.editComment)
+      console.log("contentdkjdashk", response.editComment)
       setContentComment(response.editComment.content);
       setIsEditMode(false);
       setOpenMenu(false)

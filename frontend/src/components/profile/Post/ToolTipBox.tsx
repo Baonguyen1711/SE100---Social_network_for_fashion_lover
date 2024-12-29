@@ -23,9 +23,9 @@ const ToolTipBox: React.FC<Props> = ({
         fetchUserData();
     }, [hoveredUser]);
     const fetchUserData = async () => {
-        setCurrentUser(await getUserByUserId(hoveredUser?._id));
+        setCurrentUser(await getUserByUserId());
         const response = await checkFollowed(
-            localStorage.getItem("userId"),
+            localStorage.getItem("user_id"),
             hoveredUser?._id
         );
         if (response?.ok) {
@@ -76,7 +76,7 @@ const ToolTipBox: React.FC<Props> = ({
                             </div>
                         </div>
                         <div className={style.actionsBar}>
-                            {currentUser?._id !== localStorage.getItem("userId") ? (
+                            {currentUser?._id !== localStorage.getItem("user_id") ? (
                                 !isFollowed ? (
                                     <Button
                                         variant="contained"

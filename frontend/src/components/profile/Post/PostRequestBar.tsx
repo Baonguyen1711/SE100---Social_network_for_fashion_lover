@@ -1,9 +1,11 @@
 import { Avatar, Button, Card, Stack, TextField } from '@mui/material'
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PostToolDisplay from './PostToolDisplay'
 import { AddPhotoAlternate, AddReaction } from '@mui/icons-material'
 import { Post, User } from '../../../types'
 import style from '../css/PostRequestBar.module.css'
+import { useLocation } from 'react-router-dom'
+
 
 interface Props {
     user: User | undefined
@@ -13,6 +15,42 @@ interface Props {
 }
 
 const PostRequestBar: React.FC<Props> = ({ user, toggleDisplayToolBox, isDisplayTool, updatePostsState }) => {
+    const location = useLocation()
+    const [userName, setUserName] = useState<string>("")
+    const [userAvatar, setUserAvatar] = useState<string>("")
+    console.log(location.pathname.split("/")[1])
+    const currentEmail = localStorage.getItem("email")
+    useEffect(() => {
+        const getUserInfo = async () => {
+
+            try {
+                const url = `http://127.0.0.1:5000/api/v1/user/info?email=${currentEmail}`
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Error in getting message`);
+                }
+
+
+
+                const data = await response.json()
+                debugger;
+                setUserAvatar(data.userInfo.avatar)
+                setUserName(`${data.userInfo.firstname} ${data.userInfo.lastname}`)
+            } catch (e) {
+                console.log("Some errors happen", e)
+            }
+
+        }
+
+        getUserInfo()
+    }, []);
     return (
         <Card
             sx={{
@@ -23,7 +61,7 @@ const PostRequestBar: React.FC<Props> = ({ user, toggleDisplayToolBox, isDisplay
             }}
         >
             <Stack direction="row" spacing={2} alignItems="center" display={"flex"}>
-                <Avatar alt="User Avatar" src={user?.avatar} />
+                <Avatar alt="User Avatar" src={userAvatar} />
                 <TextField
                     placeholder="Share something"
                     sx={{
@@ -52,7 +90,7 @@ const PostRequestBar: React.FC<Props> = ({ user, toggleDisplayToolBox, isDisplay
                     startIcon={<AddReaction />}
                     onClick={toggleDisplayToolBox}
                 >
-                    Emotion
+                    Feelings
                 </Button>
             </Stack>
             {isDisplayTool && <PostToolDisplay isOpen={isDisplayTool} onClose={toggleDisplayToolBox} onCreatedPost={updatePostsState} />}

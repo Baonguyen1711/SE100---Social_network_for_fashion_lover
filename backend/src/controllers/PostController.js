@@ -455,7 +455,7 @@ class PostController {
           },
         },
       ]);
-      res.status(200).json({ posts: posts, user: user });
+      res.status(200).json({ recommentPost: posts, user: user });
     } catch (e) {
       console.log(e);
     }
@@ -775,7 +775,7 @@ class PostController {
   }
   async getPostsByFollowedUsers(req, res) {
     try {
-      const { userId } = req.params;
+      const { userId } = req.query;
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: "Invalid userId format", userId });
       }
@@ -933,7 +933,7 @@ class PostController {
           },
         },
       ]);
-      res.status(200).json({ posts: posts, user: user });
+      res.status(200).json({ recommentPost: posts, user: user });
     } catch (e) {
       console.log(e);
     }

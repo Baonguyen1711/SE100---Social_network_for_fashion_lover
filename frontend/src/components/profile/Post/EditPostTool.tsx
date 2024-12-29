@@ -66,9 +66,9 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
     setIsChanged(true);
   };
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("user_id");
     const fetchData = async () => {
-      const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
+      const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -150,7 +150,7 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
     );
 
     if (response) {
-      if(onUpdated) onUpdated();
+      if (onUpdated) onUpdated();
       onClose();
     } else {
       window.alert("Have a trouble");
@@ -290,131 +290,131 @@ const PostToolDisplay: React.FC<PostToolDisplayProps> = ({
               />
               {fields.images
                 ? fields.images.map((imgUrl) => (
-                    <Box
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "auto",
+                      paddingTop: "75%", // 4:3 Aspect Ratio
+                      border: "1px solid #ddd",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <img
+                      src={imgUrl}
+                      alt="Uploaded"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        setFields((prev) => {
+                          const postImagesLength = post?.images?.length || 0;
+                          const fieldsImagesLength =
+                            fields?.images?.length || 0;
+                          setIsDisableConfirmButton(
+                            postImagesLength - fieldsImagesLength === 1
+                          );
+                          return {
+                            ...prev,
+                            images: prev.images?.filter(
+                              (img) => imgUrl !== img
+                            ),
+                          };
+                        });
+                      }}
                       sx={{
-                        position: "relative",
-                        width: "auto",
-                        paddingTop: "75%", // 4:3 Aspect Ratio
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        overflow: "hidden",
-                        marginBottom: "16px",
+                        position: "absolute",
+                        top: "8px",
+                        right: "8px",
+                        opacity: "0.4",
+                        backgroundColor: "#99A67A", // Màu nền trắng mờ
+                        border: "2px solid #CCDCBA",
+                        color: "#E6F5DE", // Màu chữ
+                        borderRadius: "50%", // Hình dạng tròn
+                        minWidth: "32px", // Kích thước nhỏ nhất
+                        height: "32px", // Chiều cao cố định
+                        "&:hover": {
+                          backgroundColor: "#B6C79B",
+                          color: "#708258", // Màu chữ
+                          border: "1px solid #99A67A", // Hiệu ứng hover
+                        },
                       }}
                     >
-                      <img
-                        src={imgUrl}
-                        alt="Uploaded"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <Button
-                        onClick={() => {
-                          setFields((prev) => {
-                            const postImagesLength = post?.images?.length || 0;
-                            const fieldsImagesLength =
-                              fields?.images?.length || 0;
-                            setIsDisableConfirmButton(
-                              postImagesLength - fieldsImagesLength === 1
-                            );
-                            return {
-                              ...prev,
-                              images: prev.images?.filter(
-                                (img) => imgUrl !== img
-                              ),
-                            };
-                          });
-                        }}
-                        sx={{
-                          position: "absolute",
-                          top: "8px",
-                          right: "8px",
-                          opacity: "0.4",
-                          backgroundColor: "#99A67A", // Màu nền trắng mờ
-                          border: "2px solid #CCDCBA",
-                          color: "#E6F5DE", // Màu chữ
-                          borderRadius: "50%", // Hình dạng tròn
-                          minWidth: "32px", // Kích thước nhỏ nhất
-                          height: "32px", // Chiều cao cố định
-                          "&:hover": {
-                            backgroundColor: "#B6C79B",
-                            color: "#708258", // Màu chữ
-                            border: "1px solid #99A67A", // Hiệu ứng hover
-                          },
-                        }}
-                      >
-                        <a>X</a>
-                      </Button>
-                    </Box>
-                  ))
+                      <a>X</a>
+                    </Button>
+                  </Box>
+                ))
                 : "No image selected"}
               {selectedImages
                 ? selectedImages.map((selectedImage) => (
-                    <Box
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "auto",
+                      paddingTop: "75%", // 4:3 Aspect Ratio
+                      border: "1px solid #ddd",
+                      borderRadius: "8px",
+                      overflow: "hidden",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      alt="Uploaded"
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        setSelectedImages((prev) => {
+                          setIsDisableConfirmButton(
+                            selectedImages.length === 1
+                          );
+                          return prev
+                            ? prev.filter(
+                              (img) =>
+                                img?.lastModified !==
+                                selectedImage?.lastModified
+                            )
+                            : [];
+                        });
+                      }}
                       sx={{
-                        position: "relative",
-                        width: "auto",
-                        paddingTop: "75%", // 4:3 Aspect Ratio
-                        border: "1px solid #ddd",
-                        borderRadius: "8px",
-                        overflow: "hidden",
-                        marginBottom: "16px",
+                        position: "absolute",
+                        top: "8px",
+                        right: "8px",
+                        opacity: "0.4",
+                        backgroundColor: "#99A67A", // Màu nền trắng mờ
+                        border: "2px solid #CCDCBA",
+                        color: "#E6F5DE", // Màu chữ
+                        borderRadius: "50%", // Hình dạng tròn
+                        minWidth: "32px", // Kích thước nhỏ nhất
+                        height: "32px", // Chiều cao cố định
+                        "&:hover": {
+                          backgroundColor: "#B6C79B",
+                          color: "#708258", // Màu chữ
+                          border: "1px solid #99A67A", // Hiệu ứng hover
+                        },
                       }}
                     >
-                      <img
-                        src={URL.createObjectURL(selectedImage)}
-                        alt="Uploaded"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <Button
-                        onClick={() => {
-                          setSelectedImages((prev) => {
-                            setIsDisableConfirmButton(
-                              selectedImages.length === 1
-                            );
-                            return prev
-                              ? prev.filter(
-                                  (img) =>
-                                    img?.lastModified !==
-                                    selectedImage?.lastModified
-                                )
-                              : [];
-                          });
-                        }}
-                        sx={{
-                          position: "absolute",
-                          top: "8px",
-                          right: "8px",
-                          opacity: "0.4",
-                          backgroundColor: "#99A67A", // Màu nền trắng mờ
-                          border: "2px solid #CCDCBA",
-                          color: "#E6F5DE", // Màu chữ
-                          borderRadius: "50%", // Hình dạng tròn
-                          minWidth: "32px", // Kích thước nhỏ nhất
-                          height: "32px", // Chiều cao cố định
-                          "&:hover": {
-                            backgroundColor: "#B6C79B",
-                            color: "#708258", // Màu chữ
-                            border: "1px solid #99A67A", // Hiệu ứng hover
-                          },
-                        }}
-                      >
-                        <a>X</a>
-                      </Button>
-                    </Box>
-                  ))
+                      <a>X</a>
+                    </Button>
+                  </Box>
+                ))
                 : ""}
             </CardContent>
             {/* Các button hoặc các công cụ khác */}

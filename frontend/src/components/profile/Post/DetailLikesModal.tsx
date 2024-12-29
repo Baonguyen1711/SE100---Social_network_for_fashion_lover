@@ -26,7 +26,7 @@ const DetaiLikesModal: React.FC<Props> = ({ open, onClose, likedUserInfo }) => {
     const userNameRef = useRef<HTMLDivElement>(null);
     async function handleFollowLikedUser(followingId: string | undefined) {
         const response = await handleFollow(
-            localStorage.getItem("userId"),
+            localStorage.getItem("user_id"),
             followingId
         );
         if (response && response.ok) {
@@ -176,7 +176,7 @@ const DetaiLikesModal: React.FC<Props> = ({ open, onClose, likedUserInfo }) => {
                                                 </Typography>
                                             </div>
                                         </div>
-                                        {userlike._id !== localStorage.getItem("userId") ? (
+                                        {userlike._id !== localStorage.getItem("user_id") ? (
                                             !userlike.isFollowed ? (
                                                 <ButtonFollow
                                                     isFollowing={isFollowing}
