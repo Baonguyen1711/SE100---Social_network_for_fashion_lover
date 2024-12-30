@@ -29,9 +29,9 @@ const App = () => {
             <Route path="/message/:userEmail?" element={<MessagePage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/home" element={<HomePage />} />
-            <Route path="/favourite" element={<ProtectedRoutes element={<FavouritePage />} />}>
-              <Route index element={<ProtectedRoutes element={<FavouriteGeneral />} />} />
-              <Route path="posts" element={<ProtectedRoutes element={<FavouritePostsDisplay />} />} />
+            <Route path="/favourite" element={<FavouritePage />}>
+              <Route index element={<FavouriteGeneral />} />
+              <Route path="posts" element={<FavouritePostsDisplay />} />
             </Route>
           </Routes>
         </BackgroundProvider>
