@@ -3,6 +3,7 @@ import { Box, Typography, Avatar, Link, Modal } from '@mui/material';
 import { Notifications } from '@mui/icons-material';
 import { lightTheme } from '../../themes/theme';
 import { useSocket } from '../message/SocketContext';
+import SearchHeader from '../search/SearchHeader';
 
 
 interface Props {
@@ -40,8 +41,9 @@ const Header: React.FC = () => {
           zIndex: 1000,
           fontFamily: "Helvetica",
           fontSize: "30px",
-          marginLeft: "50px",
+          paddingLeft: "50px",
           marginRight: "50px",
+          borderBottom:"1px solid #89966B"
         }}
       >
         {/* Left Side */}
@@ -49,18 +51,16 @@ const Header: React.FC = () => {
           𝓟𝓔𝓣𝓞𝓟𝓗𝓘𝓛𝓔
         </Typography>
 
-        {/* Middle Box */}
-        <Box
+         {/* Middle Box */}
+         <Box
           sx={{
             flexGrow: 1, // Allows it to expand and take up the middle space
             display: "flex",
-            justifyContent: "center", // Centers content horizontally
+            justifyContent: "left", // Centers content horizontally
             alignItems: "center", // Centers content vertically
           }}
         >
-          <Typography>
-
-          </Typography>
+          <SearchHeader/>
         </Box>
 
         {/* Right Side */}

@@ -44,7 +44,7 @@ const SideBarHome = () => {
     //   className={clsx(style.container)}
     //   style={{ position: "fixed", top: 0 }}
     // >
-    <>
+    <div style={{padding:"8px 15px"}}>
      <SearchBar placeHolderString="Search for friend" />
       <div className={clsx(style.recent_chats_box)}>
         <h1 className={clsx(style.title)}>Recent Chats</h1>
@@ -60,7 +60,7 @@ const SideBarHome = () => {
         </div>
         <CardUpCommingEvent/> 
       </div>
-    </>
+    </div>
      
     // </div>
   )
