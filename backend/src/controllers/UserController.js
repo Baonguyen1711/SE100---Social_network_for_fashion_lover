@@ -71,7 +71,7 @@ class UserController {
 
   async getUserById(req, res) {
     try {
-      const { userId } = req.query;
+      const { userId } = req.query; 
       if (!userId) {
         return res.status(400).json({ error: "userId is required" });
       }

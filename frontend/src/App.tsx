@@ -27,7 +27,7 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/message/:userEmail?" element={<MessagePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/favourite" element={<FavouritePage />}>
               <Route index element={<FavouriteGeneral />} />

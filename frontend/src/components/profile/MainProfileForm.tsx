@@ -13,14 +13,16 @@ const MainProfileForm: React.FC = () => {
   const location = useLocation();
   const pathParts = location.pathname.split('/');
   const lastPart = pathParts[pathParts.length - 1];
+  console.log(userId);
   useEffect(() => {
     const fetchData = async () => {
       debugger;
-      const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
+      const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
       try {
         const response = await fetch(url, {
           method: "GET",
         });
+        console.log(response);
         if (!response.ok) {
           throw new Error("Error in getting user");
         }
