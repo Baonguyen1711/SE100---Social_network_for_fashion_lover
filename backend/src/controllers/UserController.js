@@ -261,6 +261,42 @@ class UserController {
       return res.status(400).send({ error: "Some error, can't update name" });
     }
   }
+  async getUserByUserName(req, res) {
+    try {
+      connectToDb();
+      const { searchString } = req.query;
+      if (!searchString && searchString.trim() === "") {
+        return res.json({
+          usersResult: [],
+          message: "searchString is empty",
+        });
+      }
+      const usersResult = await User.find({
+        $expr: {
+          $regexMatch: {
+            input: { $concat: ["$firstname", " ", "$lastname"] },
+            regex: searchString,
+            options: "i",
+          },
+        },
+      });
+
+      if (usersResult)
+        res.json({
+          usersResult: usersResult,
+          searchString: searchString,
+        });
+      else {
+        res.json({
+          usersResult: [],
+          searchString: searchString,
+          message: "User name is not found",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 module.exports = new UserController

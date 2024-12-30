@@ -339,8 +339,6 @@ const PostInformationCard: React.FC<Props> = (props) => {
             <CardContent
                 sx={{
                     paddingBottom: "0px !important",
-                    position: "relative",
-                    justifySelf: "left",
                 }}
             >
                 <ProposalCommentContainer

@@ -12,7 +12,7 @@ type CardMightLikeBoxProps = {
 const CardMightLikeBox: React.FC<CardMightLikeBoxProps> = ({
   notFollowUser,
 }) => {
-  const currentEmail = localStorage.getItem("email");
+  const currentEmail = localStorage.getItem("userId");
   const [isFollowing, setIsFollowing] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -115,7 +115,7 @@ const CardMightLikeBox: React.FC<CardMightLikeBoxProps> = ({
               variant="contained"
               color="success"
               style={{ height: "30px" }}
-              onClick={() => handleFollow(notFollowUser.email)}
+              onClick={() => handleFollow(notFollowUser._id)}
             >
               {isFollowing ? "Following" : "Follow"}
             </Button>
@@ -126,7 +126,7 @@ const CardMightLikeBox: React.FC<CardMightLikeBoxProps> = ({
                 color: "white",
                 height: "30px",
               }}
-              onClick={()=>handleIgnore(notFollowUser.email)}
+              onClick={()=>handleIgnore(notFollowUser._id)}
             >
               Ignore
             </Button>
