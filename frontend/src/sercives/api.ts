@@ -249,11 +249,11 @@ export async function handleGetPostByPostId(postId: String | null | undefined, u
     const response = await fetch(
       `http://localhost:5000/api/v1/post/getpostbypostid?postId=${postId}&userAccessId=${userId}`,
       {
-        method: "POST",
+        method: "GET",
       }
     );
     if (!response.ok) {
-      throw new Error("Failed to delete favourtie post");
+      throw new Error("Failed to get detail favourtie post");
     }
     const result = await response.json();
     //console.log("return petuser",result)

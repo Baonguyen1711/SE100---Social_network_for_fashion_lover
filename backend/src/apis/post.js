@@ -10,5 +10,6 @@ router.use('/posts', postController.getAllPost)
 router.post('/create', postController.create)
 router.get('/getposthome', postController.getPostsByFollowedUsers)
 router.delete('/delete', postController.deletePostById)
+router.get('/getpostbypostid', postController.getPostById)
 
 module.exports = router
