@@ -42,6 +42,15 @@ export interface Recipent {
   image?: string
 }
 
+export interface  EventSocket {
+  eventType: string,
+  postId: string | null | undefined,
+  createdAt: Date,
+  userName: string,
+  userAvatar: string,
+  postOwnerEmail?: string
+}
+
 export interface MessageComponentType {
   content: string;
   timeStamp: string;
@@ -62,6 +71,7 @@ export interface RecentChat {
 
     avatar: string | undefined;
   } | null;
+  image?: string
 }
 
 export interface Recipent {

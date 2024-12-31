@@ -59,7 +59,7 @@ const DetailPostExploreModal: React.FC<Props> = ({ post, onClose }) => {
   };
   const handleSavePost = async () => {
     const reponse = await createPostUserRelationship(currentPost?._id);
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("user_id");
     setCurrentPost(await handleGetPostByPostId(currentPost?._id, userId));
   };
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
