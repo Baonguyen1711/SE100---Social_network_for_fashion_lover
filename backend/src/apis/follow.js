@@ -6,8 +6,8 @@ const followController = require('../controllers/FollowController')
 
 router.use(express.json())
 // router.use('/', loginController.get)
-router.use('/create', followController.createFollow)
-router.use('/ignore', followController.createIgnore)
+router.post('/create', followController.createFollow)
+router.post('/ignore', followController.createIgnore)
 
 // router.use('/recommendfollow', followController.recommendFollows)
 router.get('/recommentfollow', followController.getNotFollows)
