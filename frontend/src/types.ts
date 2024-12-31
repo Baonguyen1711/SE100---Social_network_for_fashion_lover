@@ -39,6 +39,7 @@ export interface Recipent {
   recipentEmail: string | null;
   senderEmail: string | null;
   content: string | null;
+  image?: string
 }
 
 export interface MessageComponentType {
