@@ -4,9 +4,11 @@ import { APP_NAME } from "../../constants/constants"
 import useAuth from "../../hooks/auth/useAuth"
 import { User } from "../../types"
 import { useNavigate } from "react-router-dom"
+import { useSnackbar } from "../shared/SnackBarProvider";
+import { SnackbarProvider } from "../shared/SnackBarProvider"
 
 const LoginForm: React.FC = () => {
-
+    const { showSnackBar } = useSnackbar(); 
     const { login } = useAuth();
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -16,9 +18,13 @@ const LoginForm: React.FC = () => {
         event.preventDefault()
 
         try {
-            await login(email, password)
-            localStorage.setItem("email", email)
-            navigate("/message")
+            const isLoginSuccess = await login(email, password)
+            if(isLoginSuccess) {
+                showSnackBar("Login successful!", "success"); // Show success alert
+                navigate("/home"); // Navigate to the dashboard or desired page
+            } else {
+                showSnackBar("Login failed. Please check your credentials.", "error"); // Show error alert
+         }
         } catch (e) {
             console.log("Login failed" , e)
         }

@@ -602,6 +602,10 @@ const SideBar: React.FC<SideBarProps> = ({isOpened}) => {
   console.log(location.pathname.split("/")[1])
   const currentEmail = localStorage.getItem("email")
 
+  const handleLogout = () => {
+    localStorage.clear()
+  }
+
   useEffect(() => {
     const getUserInfo = async () => {
 
@@ -752,7 +756,7 @@ const SideBar: React.FC<SideBarProps> = ({isOpened}) => {
             }}
               display="flex" alignItems="center" gap={1} id="group" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("group") ? "#CBD9C4" : "#ffffff"}>
               <PeopleOutline sx={{ color: "#89966B" }} />
-              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Group</Typography>
+              <Typography fontFamily="Inter" color='#89966B' fontWeight="500">Profile</Typography>
 
             </Box>
           </Link>
@@ -788,7 +792,7 @@ const SideBar: React.FC<SideBarProps> = ({isOpened}) => {
           </Link>
 
 
-          <Box flexGrow={2} />
+          <Box flexGrow={1} />
 
           {/* Item sticking to the bottom */}
 
@@ -928,7 +932,7 @@ const SideBar: React.FC<SideBarProps> = ({isOpened}) => {
           </Link>
 
 
-          <Box flexGrow={2} />
+          <Box flexGrow={1} />
 
           {/* Item sticking to the bottom */}
 
@@ -939,10 +943,13 @@ const SideBar: React.FC<SideBarProps> = ({isOpened}) => {
                 cursor: 'pointer', // Change cursor to pointer on hover
               }
             }}
+            onClick= {
+              handleLogout
+            }
               display="flex" alignItems="center" gap={1} id="logOut" height="40px" padding="10px" borderRadius="10px">
               <ExitToAppOutlined sx={{ color: "#89966B" }} />
               
-
+            
             </Box>
           </Link>
 
