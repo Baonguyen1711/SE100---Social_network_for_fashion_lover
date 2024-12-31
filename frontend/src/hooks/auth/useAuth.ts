@@ -15,7 +15,7 @@ const useAuth = () => {
         const url = "http://127.0.0.1:5000/api/v1/login"
         try {
             const response = await fetch(url, {
-                method: "POST", 
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json" // Add this line to specify that the body contains JSON data
                 },
@@ -33,21 +33,21 @@ const useAuth = () => {
             const jwt = data.jwt
             const userId = data.user_id
             console.log(data)
-            
-            
+
+
             localStorage.setItem("jwt", jwt)
             localStorage.setItem("user_id", userId)
             localStorage.setItem("email", user)
 
             return true
-        } catch(e) {
+        } catch (e) {
             console.log("Some errors happen", e)
             return false
         }
-            
+
     }
 
-    return {login}
+    return { login }
 
 }
 
