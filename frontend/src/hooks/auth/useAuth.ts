@@ -36,7 +36,7 @@ const useAuth = () => {
             
             
             localStorage.setItem("jwt", jwt)
-            localStorage.setItem("userId", userId)
+            localStorage.setItem("user_id", userId)
             localStorage.setItem("email", user)
 
             return true

@@ -1,5 +1,5 @@
 import React, { ReactEventHandler, useRef, useEffect } from 'react'
-//import ColorThief, { RGBColor } from 'colorthief'
+import ColorThief, { RGBColor } from 'colorthief'
 import MessageComponent from './MessageComponent'
 import { Box } from '@mui/material'
 import { MessageComponentType } from '../../types'
@@ -24,24 +24,24 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
   const [recentMessages, setRecentMessages] = useState<MessageComponentType[]>([])
   const { messages, setMessages, chatbotMessages, setChatbotMessages } = useSocket();
   const { backgroundImageOver, setPalette } = useBackground()
+  //const [selectedUserEmail, setSelectedUserEmail] = useState<string|undefined>("")
   const selectedUserEmail = useParams().userEmail
-
   const imgRef = useRef<HTMLImageElement>(null);
   const [messageColor, setMessageColor] = useState<string>("#f0f0f0");
 
 
-  // useEffect(() => {
-  //   const colorThief = new ColorThief();
-  //   const img = new Image()
-  //   img.src = backgroundImageOver
-  //   img.crossOrigin = "anonymous"; // Important for cross-origin images
+  useEffect(() => {
+    const colorThief = new ColorThief();
+    const img = new Image()
+    img.src = backgroundImageOver
+    img.crossOrigin = "anonymous"; // Important for cross-origin images
 
-  //   img.onload = () => {
-  //     const palette = colorThief.getPalette(img);
-  //     setPalette(palette)
-  //   };
+    img.onload = () => {
+      const palette = colorThief.getPalette(img);
+      setPalette(palette)
+    };
 
-  // }, [backgroundImageOver])
+  }, [backgroundImageOver])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -49,6 +49,10 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    debugger;
+    setMessages([])
+  }, [selectedUserEmail])
   useEffect(() => {
 
     const getMessagesHistory = async () => {
@@ -71,7 +75,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
         const data = await response.json()
         setRecentMessages(data.chatHistory.reverse())
 
-        console.log("messages",messages)
+        console.log("messages", messages)
       } catch (e) {
         console.log("Some errors happen", e)
       }
@@ -103,54 +107,47 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
       }}
     >
       {
-        !isChatbot ?
-          [...recentMessages, ...messages].map((message) => (
 
-            message.image ?
+        [...recentMessages, ...messages].map((message) => {
+          console.log("Message Image URL:", message.image)
+          return message.image ?
 
+            <Box
+              component="div"
+              sx={{
+                display: "flex",
+                justifyContent: message.isSender ? "flex-start" : "flex-end",
+                margin: "10px",
+              }}
+            >
               <Box
-                component="div"
+                component="img"
+                src={message.image}
+                alt="Uploaded"
                 sx={{
-                  display: "flex",
-                  justifyContent: message.isSender ? "flex-start" : "flex-end",
-                  margin: "10px",
+                  maxWidth: "200px",       // Adjust maximum width
+                  maxHeight: "200px",      // Adjust maximum height
+                  borderRadius: "8px",     // Rounded corners
+                  objectFit: "cover",      // Ensures image fills the box neatly
+                  boxShadow: 2,            // Adds a slight shadow for aesthetics
                 }}
-              >
-                <Box
-                  component="img"
-                  src={message.image}
-                  alt="Uploaded"
-                  sx={{
-                    maxWidth: "200px",       // Adjust maximum width
-                    maxHeight: "200px",      // Adjust maximum height
-                    borderRadius: "8px",     // Rounded corners
-                    objectFit: "cover",      // Ensures image fills the box neatly
-                    boxShadow: 2,            // Adds a slight shadow for aesthetics
-                  }}
-                />
-              </Box>
+              />
+            </Box>
 
 
-              :
+            :
+            message.content !== "" ?
               <MessageComponent
                 key={message.timeStamp}
                 content={message.content}
                 timeStamp={new Date(message.timeStamp).toLocaleString().slice(0, 9)}
                 isSender={message.isSender}
               />
+              :
+              null
 
-          ))
-          :
-          [...chatbotMessages].map((message) => (
+        })
 
-            <MessageComponent
-              key={message.timeStamp}
-              content={message.content}
-              timeStamp={new Date(message.timeStamp).toLocaleString().slice(0, 9)}
-              isSender={message.isSender}
-            />
-
-          ))
       }
 
     </Box>
