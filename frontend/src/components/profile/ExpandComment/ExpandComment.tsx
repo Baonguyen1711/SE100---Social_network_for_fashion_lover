@@ -15,7 +15,7 @@ interface PropsBase {
 type Props =
   | (PropsBase & { postId: string | undefined; commentParentId?: never })
   | (PropsBase & { commentParentId: string | undefined; postId?: never });
-  
+
 const ProposalCommentContainer: React.FC<Props> = (props) => {
   const [isWatchMoreComments, setIsWatchMoreComment] = useState<boolean>(false);
   const [comments, setComments] = useState<IComment[] | undefined>();
@@ -30,7 +30,7 @@ const ProposalCommentContainer: React.FC<Props> = (props) => {
     const actionPath = postId
       ? `getCommentsByPostId?postId=${postId}`
       : `getCommentsByCommentId?commentParentId=${commentId}`;
-    const userId = localStorage.getItem("userId");
+    const userId = localStorage.getItem("user_id");
     const url = `http://localhost:5000/api/v1/comment/${actionPath}&userId=${userId}`;
     try {
       const response = await fetch(url, {
@@ -59,7 +59,7 @@ const ProposalCommentContainer: React.FC<Props> = (props) => {
       });
   };
 
- 
+
   return (
     <div className={clsx(style.expandCommentContainer)}>
       {!isWatchMoreComments ? (
@@ -70,13 +70,13 @@ const ProposalCommentContainer: React.FC<Props> = (props) => {
           className={style.userName}
         >
           {props.newCommentsArray &&
-          props.newCommentsArray.length > 0 &&
-          comments &&
-          comments?.length > 0
+            props.newCommentsArray.length > 0 &&
+            comments &&
+            comments?.length > 0
             ? "Watch another comments"
             : comments && comments?.length > 0
-            ? `Xem ${comments.length} bình luận`
-            : ""}
+              ? `Xem ${comments.length} bình luận`
+              : ""}
         </div>
       ) : (
         <div className={style.container}>
@@ -104,7 +104,7 @@ const ProposalCommentContainer: React.FC<Props> = (props) => {
             comment={newComment}
           />
         ))}
-      
+
     </div>
   );
 };

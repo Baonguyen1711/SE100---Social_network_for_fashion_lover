@@ -13,6 +13,9 @@ import { BackgroundProvider } from './components/message/BackgroundContext';
 import ExplorePage from './pages/explore/ExplorePage';
 import ProfilePage from './pages/profile/ProfilePage';
 import HomePage from './pages/home/HomePage';
+import FavouritePage from "./pages/favourite/favourite/FavouritePage";
+import FavouritePostsDisplay from "./pages/favourite/favourite/FavouritePostsDisplay";
+import FavouriteGeneral from "./pages/favourite/favourite/FavouriteGeneralDisplay";
 
 const App = () => {
   return (
@@ -24,8 +27,12 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/message/:userEmail?" element={<MessagePage />} />
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/home" element={<HomePage />} />
+            <Route path="/favourite" element={<FavouritePage />}>
+              <Route index element={<FavouriteGeneral />} />
+              <Route path="posts" element={<FavouritePostsDisplay />} />
+            </Route>
           </Routes>
         </BackgroundProvider>
       </SocketProvider>

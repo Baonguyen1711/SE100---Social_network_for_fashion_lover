@@ -4,8 +4,9 @@ export const register = (body: object) => {
   const url = "http://127.0.0.1:5000/api/v1/register";
 };
 
-export const getUserByUserId = async (userId: string | undefined | null) => {
-  const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
+export const getUserByUserId = async () => {
+  const userId = localStorage.getItem("user_id")
+  const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -90,7 +91,7 @@ export async function handleLikePost(postId: string | undefined) {
 }
 
 export async function handleGetFavouritedPetByUserId() {
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("user_id");
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/petuser/favourited/getbyuserid?userId=${userId}`,
@@ -102,9 +103,9 @@ export async function handleGetFavouritedPetByUserId() {
       throw new Error("Failed to like post");
     }
     const result = await response.json();
-    if(result.pets.length>0) //FavouritePet
-    return result.pets;
-  return null;
+    if (result.pets.length > 0)
+      return result.pets;
+    return null;
   } catch (e) {
     console.error(e);
   }
@@ -135,8 +136,7 @@ export async function createPetUserRelationship(
   }
 }
 
-export async function handleDeletePetUserById (petUserId:String|undefined)
-{
+export async function handleDeletePetUserById(petUserId: String | undefined) {
   if (petUserId === undefined) return;
   try {
     const response = await fetch(
@@ -156,9 +156,8 @@ export async function handleDeletePetUserById (petUserId:String|undefined)
   }
 }
 
-export async function isChecked (userId:string|undefined|null,petId:string)
-{
-  if (userId === undefined||petId === undefined) return;
+export async function isChecked(userId: string | undefined | null, petId: string) {
+  if (userId === undefined || petId === undefined) return;
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/petuser/checksaved?userId=${userId}&petId=${petId}`,
@@ -179,7 +178,7 @@ export async function isChecked (userId:string|undefined|null,petId:string)
 
 //FavvouritePost
 export async function createPostUserRelationship(
-  postId: string | null|undefined
+  postId: string | null | undefined
 ) {
   if (postId === undefined) return;
   try {
@@ -203,7 +202,7 @@ export async function createPostUserRelationship(
   }
 }
 export async function handleGetFavouritedPostByUserId() {
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("user_id");
   console.log("sdsda")
   try {
     const response = await fetch(
@@ -216,16 +215,15 @@ export async function handleGetFavouritedPostByUserId() {
       throw new Error("Failed to like post");
     }
     const result = await response.json();
-    if(result.posts.length > 0) //FavouritePet
-    return result.posts;
-  return null;
+    if (result.posts.length > 0) //FavouritePet
+      return result.posts;
+    return null;
   } catch (e) {
     console.error(e);
   }
 }
 
-export async function handleDeletePostUserById (postUserId:String|undefined)
-{
+export async function handleDeletePostUserById(postUserId: String | undefined) {
   if (postUserId === undefined) return;
   try {
     const response = await fetch(
@@ -245,18 +243,17 @@ export async function handleDeletePostUserById (postUserId:String|undefined)
   }
 }
 
-export async function handleGetPostByPostId(postId:String|null|undefined,userId:string|null)
-{
+export async function handleGetPostByPostId(postId: String | null | undefined, userId: string | null) {
   if (postId === undefined) return;
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/post/getpostbypostid?postId=${postId}&userAccessId=${userId}`,
       {
-        method: "POST",
+        method: "GET",
       }
     );
     if (!response.ok) {
-      throw new Error("Failed to delete favourtie post");
+      throw new Error("Failed to get detail favourtie post");
     }
     const result = await response.json();
     //console.log("return petuser",result)
@@ -266,8 +263,7 @@ export async function handleGetPostByPostId(postId:String|null|undefined,userId:
   }
 }
 
-export async function handleLikeAPI(postId:string|undefined,type:string  )
-{
+export async function handleLikeAPI(postId: string | undefined, type: string) {
 
   try {
     const response = await fetch(
@@ -278,7 +274,7 @@ export async function handleLikeAPI(postId:string|undefined,type:string  )
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: localStorage.getItem("userId"),
+          userId: localStorage.getItem("user_id"),
           targetId: postId,
           targetType: type,
         }),
@@ -297,8 +293,7 @@ export async function handleLikeAPI(postId:string|undefined,type:string  )
   }
 }
 
-export async function handleDeleteCommentAPI(commentId:string|undefined)
-{
+export async function handleDeleteCommentAPI(commentId: string | undefined) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/comment/delete?commentId=${commentId}`,
@@ -307,7 +302,7 @@ export async function handleDeleteCommentAPI(commentId:string|undefined)
         headers: {
           "Content-Type": "application/json",
         },
-        
+
       }
     );
     if (!response.ok) {
@@ -320,8 +315,7 @@ export async function handleDeleteCommentAPI(commentId:string|undefined)
   }
 }
 
-export async function handleUpdateNameAPI(lastName:String|undefined,firstName:String|undefined,userId:String|undefined)
-{
+export async function handleUpdateNameAPI(lastName: String | undefined, firstName: String | undefined, userId: String | undefined) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/user/updatename`,
@@ -347,8 +341,7 @@ export async function handleUpdateNameAPI(lastName:String|undefined,firstName:St
   }
 }
 
-export async function handleUpdateDescriptionAPI(description:String|undefined,userId:String|undefined)
-{
+export async function handleUpdateDescriptionAPI(description: String | undefined, userId: String | undefined) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/user/updatedescription`,
@@ -373,8 +366,7 @@ export async function handleUpdateDescriptionAPI(description:String|undefined,us
   }
 }
 
-export async function handleUpdateAvatarAPI(imageUrl:String|undefined,userId:String|undefined)
-{
+export async function handleUpdateAvatarAPI(imageUrl: String | undefined, userId: String | undefined) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/user/updateAvatar`,
@@ -399,8 +391,7 @@ export async function handleUpdateAvatarAPI(imageUrl:String|undefined,userId:Str
   }
 }
 
-export async function handleUpdatePostAPI(title:String|undefined,content:String|undefined,images:String[],postId:String|undefined)
-{
+export async function handleUpdatePostAPI(title: String | undefined, content: String | undefined, images: String[], postId: String | undefined) {
   //console.log("images",images)
   try {
     const response = await fetch(
@@ -413,8 +404,8 @@ export async function handleUpdatePostAPI(title:String|undefined,content:String|
         body: JSON.stringify({
           postId: postId,
           title: title,
-          content:content,
-          images:images
+          content: content,
+          images: images
         }),
       }
     );
@@ -428,8 +419,7 @@ export async function handleUpdatePostAPI(title:String|undefined,content:String|
   }
 }
 
-export async function handleUpdateCommentAPI(content:String|undefined,commentId:String|undefined)
-{
+export async function handleUpdateCommentAPI(content: String | undefined, commentId: String | undefined) {
   //console.log("images",images)
   try {
     const response = await fetch(
@@ -440,8 +430,8 @@ export async function handleUpdateCommentAPI(content:String|undefined,commentId:
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          contentComment:content,
-          commentId:commentId
+          contentComment: content,
+          commentId: commentId
         }),
       }
     );
@@ -450,6 +440,110 @@ export async function handleUpdateCommentAPI(content:String|undefined,commentId:
     }
     const result = await response.json();
     return result
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function handleSearchUserByUsername(searchString:string|null)
+{
+  //console.log("abcd",searchString)
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/user/searchuserbyusername?searchString=${searchString}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.usersResult;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+
+export async function handleWriteHistoryAPI(userId:string|null,targetId:string,type:string)
+{
+  console.log("handleWriteHistory",userId,targetId,type)
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/history/create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          targetId: targetId,
+          type:type
+        }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.searchHistory;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function handleDeleteHistoryByIdAPI(userId:string|null,targetId:string,type:string)
+{
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/history/delete`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          targetId: targetId,
+          type:type
+        }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.deleteHistory;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function handleGetSearchListByIdAPI(userId:string|null)
+{
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/history/gethistorysearch`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+        }),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.searchHistoryUsers;
   } catch (e) {
     console.error(e);
   }

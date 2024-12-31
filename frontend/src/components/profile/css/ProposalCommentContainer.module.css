@@ -4,7 +4,7 @@
     flex-direction: column;
     width: 100%;
     align-items: center;
-    justify-content: left;
+    justify-content: left !important;
 }
 
 .watchAll
@@ -24,7 +24,6 @@
 .firstComment
 {
     display: inline-block;
-    align-items: left;
 }
 
 .userName:hover

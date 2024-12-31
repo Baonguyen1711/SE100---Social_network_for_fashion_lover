@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, ImageList, ImageListItem, Modal, Button, Avatar, CardHeader, Card, CardActions, Stack, IconButton, Typography } from "@mui/material";
-import {Comment,
+import {
+  Comment,
 } from "@mui/icons-material";
 import style from "./css/ExploreForm.module.css";
 import { PostResponse, Post } from "../../types";
@@ -13,7 +14,7 @@ const Explore = () => {
   const [selectedImage, setSelectedImage] = useState<Post | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const userId = localStorage.getItem("userId")
+      const userId = localStorage.getItem("user_id")
       const url = `http://localhost:5000/api/v1/post/posts?userId=${userId}`;
       try {
         const response = await fetch(url, {
@@ -25,7 +26,7 @@ const Explore = () => {
         const data: PostResponse = await response.json();
         if (data.recommentPost.length > 0) {
           setItemData(data.recommentPost);
-          console.log("abcdefghj",data.recommentPost)
+          console.log("abcdefghj", data.recommentPost)
         } else {
           console.log("No posts found");
         }
@@ -44,31 +45,31 @@ const Explore = () => {
   const handleClose = () => {
     setSelectedImage(null);
   };
-  
+
   return (
     <Box sx={{ width: "100%", height: "100%", overflowY: "scroll" }}>
       <ImageList variant="masonry" cols={3} gap={8}>
         {itemData.length > 0
           ? itemData.map((item) => {
-              return (
-                <ImageListItem
-                  key={item._id}
-                  className={style.imageItem}
-                  onClick={() => handleImageClick(item)}
-                >
-                  <img
-                    src={`${item.images[0]}?w=248&fit=crop&auto=format&dpr=2`}
-                    // {...srcset(item.media, 121, item.cols, item.rows)}
-                    alt={item.content}
-                    loading="lazy"
-                    className={style.image}
-                  />
-                  <div className={style.overlay}>
-                    <h3>{item.title}</h3>
-                  </div>
-                </ImageListItem>
-              );
-            })
+            return (
+              <ImageListItem
+                key={item._id}
+                className={style.imageItem}
+                onClick={() => handleImageClick(item)}
+              >
+                <img
+                  src={`${item.images[0]}?w=248&fit=crop&auto=format&dpr=2`}
+                  // {...srcset(item.media, 121, item.cols, item.rows)}
+                  alt={item.content}
+                  loading="lazy"
+                  className={style.image}
+                />
+                <div className={style.overlay}>
+                  <h3>{item.title}</h3>
+                </div>
+              </ImageListItem>
+            );
+          })
           : "Don't have any posts"}
       </ImageList>
 
