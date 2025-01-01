@@ -55,8 +55,7 @@ const SideBarHome = () => {
           className={clsx(style.mightLikeTitle)}
           style={{ justifyContent: "space-between", display: "flex" }}
         >
-          <h5>Upcoming Events</h5>
-          <h5 className={style.titleClick}>See all</h5>
+          <h5 className={clsx(style.title)}>Upcoming Events</h5>
         </div>
         <CardUpCommingEvent/> 
       </div>

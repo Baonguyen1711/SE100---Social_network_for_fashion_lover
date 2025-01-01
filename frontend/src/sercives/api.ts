@@ -190,7 +190,7 @@ export async function createPostUserRelationship(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
+        userId: localStorage.getItem("user_id"),
         postId: postId,
       }),
     });

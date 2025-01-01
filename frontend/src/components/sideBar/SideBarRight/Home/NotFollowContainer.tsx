@@ -33,11 +33,10 @@ const NotFollowContainer = () => {
     <>
       <div className={clsx(style.line)}></div>
       <div
-        className={clsx(style.mightLikeTitle)}
+        className={clsx(style.title)}
         style={{ justifyContent: "space-between", display: "flex" }}
       >
-        <h5>You might like</h5>
-        <h5 className={style.titleClick}>See all</h5>
+        <h5 >You might like</h5>
       </div>
       {notFollowList?.map((user) => {
         return <CardMightLikeBox notFollowUser={user} />;
