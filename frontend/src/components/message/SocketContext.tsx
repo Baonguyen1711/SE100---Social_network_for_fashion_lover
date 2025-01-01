@@ -41,7 +41,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [likePostDetailed, setLikePostDetailed] = useState<any>(undefined)
   const [notiList, setNotiList] = useState<EventSocket[]>([])
   const currentEmail = localStorage.getItem("email")
-  //const { setBackgroundImageOver, setSelectedTheme } = useBackground()
+  // const { setBackgroundImageOver, setSelectedTheme } = useBackground()
   useEffect(() => {
     socket.emit("connection", currentEmail)
     socket.emit("register", currentEmail)

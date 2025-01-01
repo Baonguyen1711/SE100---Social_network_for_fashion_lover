@@ -279,7 +279,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                 }
               }}
                 display="flex" alignItems="center" id="home" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("home") ? lightTheme.colors.primary : lightTheme.colors.background}>
-                <HomeOutlined sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <HomeOutlined sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Home</Typography> */}
 
               </Box>
@@ -293,7 +293,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                 }
               }}
                 display="flex" alignItems="center" gap={1} id="explore" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("explore") ? lightTheme.colors.primary : lightTheme.colors.background}>
-                <WindowOutlined sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <WindowOutlined sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Explore</Typography> */}
 
               </Box>
@@ -308,7 +308,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                 }
               }}
                 display="flex" alignItems="center" gap={1} id="group" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("group") ? lightTheme.colors.primary : lightTheme.colors.background}>
-                <PeopleOutline sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <PeopleOutline sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Group</Typography> */}
 
               </Box>
@@ -323,7 +323,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                 }
               }}
                 display="flex" alignItems="center" gap={1} id="favorite" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("favourite") ? lightTheme.colors.primary : lightTheme.colors.background}>
-                <TagOutlined sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <TagOutlined sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Favourite</Typography> */}
 
               </Box>
@@ -338,7 +338,7 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                 }
               }}
                 display="flex" alignItems="center" gap={1} id="message" height="40px" padding="10px" borderRadius="10px" bgcolor={isActive("message") ? lightTheme.colors.primary : lightTheme.colors.background}>
-                <SendOutlined sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <SendOutlined sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Message</Typography> */}
 
               </Box>
@@ -356,8 +356,12 @@ const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
                   cursor: 'pointer', // Change cursor to pointer on hover
                 }
               }}
+
+              onClick= {
+                handleLogout
+              }
                 display="flex" alignItems="center" gap={1} id="logOut" height="40px" padding="10px" borderRadius="10px">
-                <ExitToAppOutlined sx={{ color: lightTheme.colors.text, width:"100%" }} />
+                <ExitToAppOutlined sx={{ color: lightTheme.colors.secondary, width:"100%" }} />
                 {/* <Typography fontFamily="Inter" color={lightTheme.colors.text} fontWeight="500">Log out</Typography> */}
 
               </Box>

@@ -23,7 +23,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
   //const { selectedUserEmail } = useSelectedUser()
   const [recentMessages, setRecentMessages] = useState<MessageComponentType[]>([])
   const { messages, setMessages, chatbotMessages, setChatbotMessages } = useSocket();
-  const { backgroundImageOver, setPalette } = useBackground()
+  const { backgroundImageOver, setPalette, setBackgroundImageOver } = useBackground()
   //const [selectedUserEmail, setSelectedUserEmail] = useState<string|undefined>("")
   const selectedUserEmail = useParams().userEmail
   const imgRef = useRef<HTMLImageElement>(null);
@@ -42,6 +42,16 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
     };
 
   }, [backgroundImageOver])
+
+  useEffect(()=>{
+    const tempBackground: { [key: string]: string } = JSON.parse(localStorage.getItem("background") ?? "{}")
+    if(selectedUserEmail && selectedUserEmail in tempBackground) {
+      setBackgroundImageOver(tempBackground[selectedUserEmail])
+    } else {
+      setBackgroundImageOver("")
+    }
+    
+  },[selectedUserEmail])
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -103,7 +113,8 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
       sx={{
         overflowY: "scroll",
         backgroundImage: `url(${backgroundImageOver})`,
-        backgroundSize: "cover"
+        backgroundSize: "cover",
+        objectFit: "cover"
       }}
     >
       {

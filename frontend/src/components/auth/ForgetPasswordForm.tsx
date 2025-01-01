@@ -6,8 +6,9 @@ import { User } from "../../types"
 import { useNavigate } from "react-router-dom"
 import { useSnackbar } from "../shared/SnackBarProvider";
 import { SnackbarProvider } from "../shared/SnackBarProvider"
+import { error } from "console"
 
-const LoginForm: React.FC = () => {
+const ForgetPasswordForm: React.FC = () => {
     const { showSnackBar } = useSnackbar();
     const { login } = useAuth();
     const [email, setEmail] = useState("")
@@ -16,18 +17,21 @@ const LoginForm: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-
+        debugger;
         try {
-            const isLoginSuccess = await login(email, password)
-            if (isLoginSuccess) {
-                showSnackBar("Login successful!", "success"); // Show success alert
-                navigate("/home"); // Navigate to the dashboard or desired page
-            } else {
-                showSnackBar("Login failed. Please check your credentials.", "error"); // Show error alert
+            const response = await fetch(
+              `http://127.0.0.1:5000/api/v1/user/reset_password/send?user_email=${email}`
+            );
+            
+            if(!response.ok) {
+                showSnackBar("fail to send mail","error")
+                return 
             }
-        } catch (e) {
-            console.log("Login failed", e)
-        }
+
+            showSnackBar("Mail sent! Please check your mail for rest link","success")
+          } catch (e) {
+            return e;
+          }
     }
 
     return (
@@ -84,27 +88,6 @@ const LoginForm: React.FC = () => {
 
                     </TextField>
 
-                    <TextField
-                        required
-                        id="password"
-                        variant="outlined"
-                        label="Enter your password"
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        sx={{
-
-                            "& .MuiOutlinedInput-notchedOutline": {
-                                borderColor: "#DFE5D5",
-                                borderWidth: "2px",
-                                borderRadius: "20px"
-                            },
-                            width: "100%",
-                            marginBottom: "24px",
-                        }}
-                    >
-
-                    </TextField>
-
                     <Button
                         id="loginBtn"
                         variant="contained"
@@ -117,7 +100,7 @@ const LoginForm: React.FC = () => {
                             marginBottom: "24px"
                         }}
                     >
-                        Log in
+                        Send reset email
                     </Button>
                 </form>
 
@@ -147,12 +130,12 @@ const LoginForm: React.FC = () => {
                     {/* Forgot Password Section */}
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                         <Link
-                            href="/forgot-password"
+                            href="/login"
                             color="#91A48B"
                             sx={{ textDecoration: "none", fontWeight: "500", lineHeight: "1.5" }}
                         >
-                            <Typography variant="body1" sx={{ color: "#ADBBA5", marginRight: 1 }}>
-                                Forgot password
+                            <Typography variant="body1" sx={{ color: "#ADBBA5" }}>
+                                Log in
                             </Typography>
                         </Link>
                     </Box>
@@ -165,4 +148,4 @@ const LoginForm: React.FC = () => {
     )
 }
 
-export default LoginForm
+export default ForgetPasswordForm
