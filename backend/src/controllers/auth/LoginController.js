@@ -7,7 +7,7 @@ class LoginController {
     
     // verify login
     async verify(req, res) {
-        connectToDb()
+        
         const JWT_SECRET = process.env.JWT_SECRET
         const { email, password } = req.body
         console.log("req.body",req.body)

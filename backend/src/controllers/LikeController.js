@@ -9,7 +9,7 @@ mongoose.set("debug", true);
 class LikeController {
   async createLikePost(req, res) {
     try {
-      await connectToDb();
+      ;
       const { userId, targetId, targetType } = req.body;
       //console.log("userId,xcxc targetId, targetType", userId, targetId, targetType);
       if (!userId || !targetId || !targetType) {

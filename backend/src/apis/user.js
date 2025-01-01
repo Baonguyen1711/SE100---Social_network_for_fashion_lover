@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const userController = require('../controllers/UserController')
+const dbMiddleware = require('../middlewares/dbConnection')
 
 router.use(express.json())
 

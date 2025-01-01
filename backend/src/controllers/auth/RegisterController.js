@@ -11,7 +11,7 @@ class RegisterController {
 
 
         try {
-            connectToDb()
+            
             console.log(req.body)
             const {email, password, firstName, lastName, phone,location,avatar} = req.body
             console.log(email, password, firstName, lastName, phone,location,avatar);

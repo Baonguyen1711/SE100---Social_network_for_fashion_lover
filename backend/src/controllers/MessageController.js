@@ -1,5 +1,5 @@
 
-const User = require('../models/user')
+const User = require('../models/User')
 
 const Message = require('../models/Message')
 const mongoose = require('mongoose')
@@ -14,7 +14,7 @@ class MessageController {
 
 
         try {
-            connectToDb()
+            
             console.log(req.body)
             const { email, password, firstName, lastName, phone } = req.body
 
@@ -41,7 +41,7 @@ class MessageController {
 
     async getRencentSender(req, res) {
         try {
-            connectToDb()
+            
 
             const { email } = req.query
 
@@ -147,7 +147,7 @@ class MessageController {
 
     async getChatHistory(req, res) {
         try {
-            connectToDb()
+            
 
             const { senderEmail, recipentEmail } = req.query
 
@@ -236,7 +236,7 @@ class MessageController {
     async saveMessage(req,res) {
         try {
 
-            connectToDb()
+            
             const {senderEmail, recipentEmail, content} = req.query
 
             const newMessage = new Message({
@@ -258,7 +258,7 @@ class MessageController {
 
     // async getRencentMessage(req,res) {
     //     try {
-    //         connectToDb()
+    //         
 
             
     //     } catch(e) {

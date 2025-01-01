@@ -16,7 +16,6 @@ class UserController {
   //[GET] user info
 
   async getAll(req, res) {
-    await connectToDb()
     const userInfo = await User.find({}, { avatar: 1, location: 1, firstname: 1, lastname: 1 })
 
     const formattedUserInfo = userInfo.map(user => {
@@ -36,7 +35,7 @@ class UserController {
     }
   }
   async getInfo(req, res) {
-    await connectToDb()
+    
     const { email } = req.query
 
     const userInfo = await User.findOne({ email })
@@ -53,7 +52,7 @@ class UserController {
   }
 
   async setAvatar(req, res) {
-    await connectToDb()
+    
     const { email, avtar } = req.query
 
     const user = await User.find({ email })
@@ -80,7 +79,7 @@ class UserController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: 'Invalid userId format', userId });
       }
-      await connectToDb();
+      ;
       const user = await User.findOne({ _id: new ObjectId(`${userId}`) }, { avatar: 1, description: 1, firstname: 1, lastname: 1, location: 1, email: 1 });
       if (user) {
         const result = {
@@ -147,7 +146,7 @@ class UserController {
   }
 
   // async getAvatar(req,res) {
-  //     await connectToDb()
+  //     
   //     const { email, avtar } = req.query
 
   //     const user = await User.find({ email })
@@ -236,7 +235,7 @@ class UserController {
 
   async sendResetLink(req, res) {
     try {
-      await connectToDb();
+      ;
 
       const { user_email } = req.query;
       const user = await User.findOne({ email: user_email });
@@ -280,7 +279,7 @@ class UserController {
 
   async resetPassword(req, res) {
     try {
-      await connectToDb();
+      ;
 
       const { newPassword, token  } = req.body;
 
@@ -305,7 +304,7 @@ class UserController {
 
   async resetPasswordForm(req, res) {
     try {
-      await connectToDb();
+      ;
 
       const { token } = req.params;
 
@@ -451,7 +450,7 @@ class UserController {
   }
   async getUserByUserName(req, res) {
     try {
-      connectToDb();
+      
       const { searchString } = req.query;
       if (!searchString && searchString.trim() === "") {
         return res.json({

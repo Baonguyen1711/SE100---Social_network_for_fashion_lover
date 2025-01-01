@@ -147,7 +147,7 @@ class FollowController {
 
   async getNotFollows(req, res) {
     try {
-      connectToDb();
+      
       const { followerId } = req.query;
       if (!ObjectId.isValid(followerId)) {
         return res

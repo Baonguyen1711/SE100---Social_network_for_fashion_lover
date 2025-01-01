@@ -7,13 +7,15 @@ const http = require("http");
 const socketIo = require("socket.io");
 const port = 5000;
 const socketPort = 4000;
-
+const dbMiddleware = require("./src/middlewares/dbConnection")
 app.use(cors());
 //app.use(express.json())
 
 api(app);
 
 app.use(morgan("combined"));
+app.use(dbMiddleware)
+
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {

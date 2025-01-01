@@ -9,7 +9,7 @@ class EventController {
     async create(req, res) {
         console.log("Create example");
         try {
-            connectToDb();
+            
             const notiArray
             =
                 req.body;
@@ -44,8 +44,7 @@ class EventController {
 
     async getRecentNoti(req, res) {
         try {
-            // Đảm bảo kết nối được thiết lập
-            await connectToDb();
+
 
             const { page, limit, postOwnerEmail } = req.query
 
