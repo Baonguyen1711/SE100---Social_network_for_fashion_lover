@@ -12,7 +12,7 @@ interface SideBarProps {
 const SideBar: React.FC<SideBarProps> = ({ isOpened }) => {
 
   const location = useLocation()
-  const userId = localStorage.getItem("userId")
+  const userId = localStorage.getItem("user_id")
 
   const isActive = (path: string) => {  
   // Check if the path is '/profile/:user_id'

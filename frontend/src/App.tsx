@@ -11,6 +11,7 @@ import theme from "./themes/theme";
 import { ThemeProvider } from "@mui/material";
 import { SocketProvider } from "./components/message/SocketContext";
 import { BackgroundProvider } from "./components/message/BackgroundContext";
+import { SnackbarProvider } from "./components/shared/SnackBarProvider";
 import ExplorePage from "./pages/explore/ExplorePage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import HomePage from "./pages/home/HomePage";
@@ -20,7 +21,7 @@ import FavouriteGeneral from "./pages/favourite/favourite/FavouriteGeneralDispla
 import PostsDisplay from "./components/profile/Post/PostsDisplay";
 import FollowingDisplay from "./components/profile/Following/FollowingDisplay";
 import FollowerDisplay from "./components/profile/Following/FollowerDisplay";
-
+import ForgetPasswordPage from "./pages/auth/ForgetPasswordPage";
 
 const App = () => {
   return (
@@ -64,6 +65,7 @@ const App = () => {
       </SocketProvider>
     </ThemeProvider>
   );
+  
 };
 
 export default App;

@@ -13,6 +13,8 @@ const dbMiddleware = async (req, res, next) => {
     console.error("Database connection error:", err);
     res.status(500).json({ message: "Database connection failed." });
   }
+  
 };
 
 module.exports = dbMiddleware;
+
