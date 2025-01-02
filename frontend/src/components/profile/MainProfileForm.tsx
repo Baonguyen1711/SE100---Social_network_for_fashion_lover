@@ -61,7 +61,7 @@ const MainProfileForm: React.FC = () => {
             ""
           )}
 
-          {/* <a>
+          <a>
             <Link to={`/profile/${userId}/following`} className={clsx(style.link,{
               [style.active]: lastPart === 'following',
             })}>
@@ -74,7 +74,7 @@ const MainProfileForm: React.FC = () => {
             })}>
               UserFollower
             </Link>
-          </a> */}
+          </a>
         </nav>
         <div className={style.layout}>
           <AccessUrlProvider type="profile" TargetUserId={userId} userId={userId}>

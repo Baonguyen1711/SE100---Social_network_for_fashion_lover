@@ -182,6 +182,136 @@ class FollowController {
       console.log(e);
     }
   }
+  async getFollowingByUserId(req, res) {
+    try {
+      connectToDb();
+      const { followerId, searchString } = req.query;
+      //console.log("abcdefghjlklkaslkasd", followerId);
+      if (!ObjectId.isValid(followerId)) {
+        return res.status(400).send({
+          error: "Invalid followerId format",
+        });
+      }
+      // Bước 1: Lấy danh sách những người mà người dùng đã follow (isDelete = false)
+      const following = await Follow.find({
+        followerId: followerId,
+        isDelete: false,
+      })
+        .populate("followingId")
+        .sort({ createdAt: -1 });
+
+      if (!following.length) {
+        return res.json({
+          followingUsers: [],
+          message: "No following users found",
+        });
+      }
+
+      const followingId = following.map((follow) => follow.followingId);
+
+      let query = { _id: { $in: followingId } };
+
+      if (searchString && searchString.trim() !== "") {
+        query.$expr = {
+          $regexMatch: {
+            input: { $concat: ["$firstname", " ", "$lastname"] },
+            regex: searchString,
+            options: "i",
+          },
+        };
+      }
+
+      const followingUsers = await User.find(query);
+
+      res.json({
+        followingUsers: followingUsers,
+        searchString: searchString,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getFollowerByUserId(req, res) {
+    try {
+      connectToDb();
+      const { followingId, searchString } = req.query;
+      //console.log("abcdefghjlklkaslkasd", followerId);
+      if (!ObjectId.isValid(followingId)) {
+        return res.status(400).send({
+          error: "Invalid followerId format",
+        });
+      }
+      // Bước 1: Lấy danh sách những người mà người dùng đã follow (isDelete = false)
+      const following = await Follow.find({
+        followingId: followingId,
+        isDelete: false,
+      })
+        .populate("followingId")
+        .sort({ createdAt: -1 });
+
+      if (!following.length) {
+        return res.json({
+          followingUsers: [],
+          message: "No following users found",
+        });
+      }
+
+      const followerId = following.map((follow) => follow.followerId);
+
+      let query = { _id: { $in: followerId } };
+
+      if (searchString && searchString.trim() !== "") {
+        query.$expr = {
+          $regexMatch: {
+            input: { $concat: ["$firstname", " ", "$lastname"] },
+            regex: searchString,
+            options: "i",
+          },
+        };
+      }
+
+      const followerUsers = await User.find(query);
+
+      res.json({
+        followerUsers: followerUsers,
+        searchString: searchString,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async deleteFollow(req, res) {
+    try {
+      connectToDb();
+      const { followerId, followingId } = req.query;
+      //console.log("abcdefghjlklkaslkasd",followerId)
+      if (!ObjectId.isValid(followerId) || !ObjectId.isValid(followerId)) {
+        return res.status(400).send({
+          error: "Invalid followerId format",
+        });
+      }
+      const followInfo = await Follow.findOne({
+        followerId: followerId,
+        followingId: followingId,
+      });
+
+      if (followInfo) {
+        followInfo.isDelete = true;
+        followInfo.save();
+        return res.status(200).send({
+          unfollowInfo: followInfo,
+        });
+      } else {
+        return res.status(404).send({
+          message: "Not found follow information",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 module.exports = new FollowController();

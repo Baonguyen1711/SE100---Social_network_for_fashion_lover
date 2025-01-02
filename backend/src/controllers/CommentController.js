@@ -11,7 +11,7 @@ class CommentController {
     try {
       
       const { content, postId, userId, parentId } = req.body;
-      console.log("content, postId, userId, parentId",content, postId, userId, parentId)
+      //console.log("content, postId, userId, parentId",content, postId, userId, parentId)
       const validatedParentId = ObjectId.isValid(parentId) ? parentId : null;
       if (!content || !postId || !userId) {
         return res.status(400).json({

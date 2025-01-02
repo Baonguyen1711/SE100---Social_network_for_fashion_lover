@@ -135,7 +135,9 @@ const EditProfileTool: React.FC<PostToolDisplayProps> = ({
     fetchData(); // Call fetchData inside useEffect
   }, []);
   const fetchData = async () => {
-    const userId = localStorage.getItem("user_id");
+
+   const userId = localStorage.getItem("user_id");
+
     const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
     try {
       const response = await fetch(url, {

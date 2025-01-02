@@ -543,6 +543,70 @@ export async function handleUpdateCommentAPI(content: String | undefined, commen
   }
 }
 
+export async function handleGetFollowingByUserId(userId: string | null | undefined, searchString: string | null = "") {
+  console.log("userId","searchString",userId,searchString)
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/follow/getfollowingbyuserid?followerId=${userId}&searchString=${searchString}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.followingUsers;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function handleGetFollowerByUserId(userId: string | null | undefined, searchString: string | null = "") {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/follow/getfollowerbyuserid?followingId=${userId}&searchString=${searchString}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.followerUsers;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export async function handleDeleteFollow(followerId: string | undefined, followingId: string | undefined) {
+  try {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/follow/deletefollow?followerId=${followerId}&followingId=${followingId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to getFollowingUsers");
+    }
+    const result = await response.json();
+    return result.unfollowInfo;
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export async function handleSearchUserByUsername(searchString:string|null)
 {
   //console.log("abcd",searchString)
