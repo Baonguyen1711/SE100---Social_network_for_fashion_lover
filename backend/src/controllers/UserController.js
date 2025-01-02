@@ -80,10 +80,12 @@ class UserController {
       }
       await connectToDb();
       const user = await User.findOne({ _id: new ObjectId(`${userId}`) }, { avatar: 1, description: 1, firstname: 1, lastname: 1, location: 1, email: 1 });
+      console.log("usâsser",user)
       if (user) {
         const result = {
           ...user.toObject(),
         }
+
         return res.json({ user: result });
       } else {
         return res.status(404).json({ error: "User not found" });

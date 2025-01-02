@@ -16,7 +16,7 @@ const MainProfileForm: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       debugger;
-      const url = `http://localhost:5000/api/v1/user/getbyid/${userId}`;
+      const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
       try {
         const response = await fetch(url, {
           method: "GET",
@@ -59,7 +59,7 @@ const MainProfileForm: React.FC = () => {
             ""
           )}
 
-          {/* <a>
+          <a>
             <Link to={`/profile/${userId}/following`} className={clsx(style.link,{
               [style.active]: lastPart === 'following',
             })}>
@@ -72,7 +72,7 @@ const MainProfileForm: React.FC = () => {
             })}>
               UserFollower
             </Link>
-          </a> */}
+          </a>
         </nav>
         <div className={style.layout}>
           <AccessUrlProvider type="profile" TargetUserId={userId} userId={userId}>
