@@ -14,7 +14,7 @@ import { Grid2, ToggleButton, Box,Divider } from '@mui/material'
 import { ArrowLeftOutlined, ArrowRightOutlined } from '@mui/icons-material'
 
 const MessagePage = () => {
-  //const { backgroundImageOver } = useBackground();
+  const { backgroundImageOver } = useBackground();
   return (
     <BackgroundProvider>
       <SocketProvider>

@@ -7,18 +7,53 @@ import {
   TextareaAutosize,
   TextField,
 } from "@mui/material";
-import { PostComment, IComment, Post, UserInfo, User } from "../../types";
+import { PostComment, IComment, Post, UserInfo, User, EventSocket } from "../../types";
 import { Share } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
 import { getUserByUserId } from "../../sercives/api";
+import { handleGetPostByPostId } from "../../sercives/api";
+import { io, Socket } from 'socket.io-client';
+import clsx from 'clsx'
 
+const socket = io('http://localhost:4000');
 interface Props {
   postId: string | undefined | null
   parentId?: string | undefined | null
   onAddComment?: (newComment: IComment | undefined) => void
   content?: string | null
 }
+
 const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
+
+
+  const handleSocketEmit = async () => {
+
+    const url = `http://127.0.0.1:5000/api/v1/notification/create`
+    if(eventSocketList.length >=3) {
+      try {
+        debugger;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(eventSocketList)
+        })
+  
+        if (!response.ok) {
+          console.log("error in posting event")
+        }
+        setEventSocketList([])
+        console.log("posting event successfully")
+      } catch (e) {
+        console.log("error", e)
+      }
+    }
+    
+  }
+  //const batchProcessor = createBatchProcessor(5, 3000, handleSocketEmit)
+
+
   const [fields, setFields] = useState<PostComment>({
     content: "",
     postId: props.postId ? props.postId : "",
@@ -27,19 +62,21 @@ const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
   });
   const [loading, setLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState<User>();
+  const [postOwnerEmail, setPostOwnerEmail] = useState<string>("")
+  const [eventSocketList, setEventSocketList] = useState<EventSocket[]>([])
   useEffect(() => {
     fetchUserData()
   }, [])
   //
   const fetchUserData = async () => {
-    setCurrentUser(await getUserByUserId())
+    const userId = localStorage.getItem("user_id")
+    setCurrentUser(await getUserByUserId(userId))
   };
   const handlePostComment = async () => {
     if (fields.content === "") {
       return;
     }
-    console.log("dsadsajasdskdajkdjsadkjs", fields)
-    //setLoading(true);
+
     try {
       const url = `http://localhost:5000/api/v1/comment/create`;
       const response = await fetch(url, {
@@ -54,15 +91,65 @@ const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
           parentId: fields.parentId,
         }),
       });
+
+
+      const res = await handleGetPostByPostId(props.postId, localStorage.getItem("user_id"))
+      const postOwnerEmail = res.userInfo.email
+
+      console.log("res", res)
+      const comment = {
+        "userEmail": localStorage.getItem("email"),
+        "postOwnerEmail": postOwnerEmail,
+        "postId": props.postId,
+        "type": "comment",
+      }
+
+
+      socket.emit("newLike", comment)
+      setPostOwnerEmail(postOwnerEmail)
+      //const result = await res.json();
+
       if (response.ok) {
         const data = await response.json()
-        //console.log("dasdkajkasjdksdjasksajask",data.newComment)
+        //console.log("avcdf",data.newComment)
         props.onAddComment?.(data.newComment)
         //console.log("Comment posted successfully");
         setFields((prev) => ({ ...prev, content: "" }));
       }
     } catch (e) {
       console.log("Error: ", e);
+    }
+
+    const infoUrl = `http://localhost:5000/api/v1/user/info?email=${localStorage.getItem("email")}`;
+    try {
+      const response = await fetch(infoUrl, {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error("Error in getting user");
+      }
+
+      const data = await response.json();
+
+      const userAvatar = data.userInfo.avatar
+      const userName = `${data.userInfo.firstname} ${data.userInfo.lastname}`
+      const event: EventSocket = {
+        eventType: "comment",
+        postId: props.postId,
+        userName: userName,
+        userAvatar: userAvatar,
+        createdAt: new Date,
+        postOwnerEmail: postOwnerEmail
+      }
+
+      console.log("event", event)
+
+      setEventSocketList((prev)=> [...prev, event])
+      handleSocketEmit()
+
+
+    } catch (e) {
+      console.log(e)
     }
   };
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,9 +164,9 @@ const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
     }));
   };
   return (
-    <div className={style.container}>
+    <div className={clsx(style.container)}>
       <Avatar src={currentUser?.avatar} />
-      <div className={style.inputContent}>
+      <div className={clsx(style.inputContent)}>
         <TextField
           id="content"
           inputRef={ref}

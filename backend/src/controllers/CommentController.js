@@ -9,7 +9,7 @@ class CommentController {
   //[POST]
   async create(req, res) {
     try {
-      connectToDb();
+      
       const { content, postId, userId, parentId } = req.body;
       //console.log("content, postId, userId, parentId",content, postId, userId, parentId)
       const validatedParentId = ObjectId.isValid(parentId) ? parentId : null;
@@ -79,7 +79,7 @@ class CommentController {
 
   async getCommentsByPostId(req, res) {
     try {
-      connectToDb();
+      
       const { postId,userId } = req.query;
       if (!postId||!userId) {
         res.status(400).json({
@@ -175,7 +175,7 @@ class CommentController {
 
   async getCommentsByCommentId(req, res) {
     try {
-      connectToDb();
+      
       const { commentParentId,userId } = req.query;
       if (!commentParentId||!userId) {
         res.status(400).json({
@@ -266,7 +266,7 @@ class CommentController {
   }
   async deleteCommentByCommentId(req, res) {
     try {
-      connectToDb();
+      
       const { commentId} = req.query;
       if (!commentId) {
         res.status(400).json({
@@ -301,7 +301,7 @@ class CommentController {
 
   async updateCommentByCommentId(req, res) {
     try {
-      connectToDb();
+      
       const { commentId,contentComment} = req.body;
       if (!commentId||!contentComment) {
         res.status(400).json({

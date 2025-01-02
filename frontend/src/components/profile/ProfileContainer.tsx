@@ -26,7 +26,7 @@ const ProfileContainer: React.FC<Properties> = (props) => {
       <div className={style.containerRight}>
         <div className={style.containerRight_Top}>
           <h1>{props.userData?.firstname + " " + props.userData?.lastname}</h1>
-          {props.userData?._id === localStorage.getItem("userId") ? (
+          {props.userData?._id === localStorage.getItem("user_id") ? (
             <Button
               sx={{
                 background: "#DFDFDF",

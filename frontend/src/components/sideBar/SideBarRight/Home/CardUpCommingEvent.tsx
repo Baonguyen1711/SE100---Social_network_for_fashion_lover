@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 
 import clsx from "clsx";
 
-import { Avatar, AvatarGroup, Button } from "@mui/material";
+import { Avatar, AvatarGroup, Button, colors, Link } from "@mui/material";
 import { Event } from "../../../../types";
 import style from "./UpCommingEvent.module.css";
-import {formatDate} from '../../../../helper'
+import { formatDate } from '../../../../helper'
+import { lightTheme } from "../../../../themes/theme";
 const CardUpCommingEvent = () => {
   const [chatsList, setChatsList] = useState<Event[]>();
   useEffect(() => {
     const fetchData = async () => {
+      debugger;
       const url = `http://localhost:5000/api/v1/event/all`;
 
       try {
@@ -34,7 +36,7 @@ const CardUpCommingEvent = () => {
   }, []);
   return (
     <>
-      { chatsList?.map((chat,index) => {
+      {chatsList?.map((chat, index) => {
         return (
           <div key={index} className={style.upcomingEventCard}>
             <div className={style.headerCard}>
@@ -42,13 +44,33 @@ const CardUpCommingEvent = () => {
               <div className={style.headerContent}>
                 <h5>{chat.eventName}</h5>
                 <h4 className={style.location}>{chat.location}</h4>
-                <h6>{formatDate(chat.dateTime.toString())}</h6>
+                <h6 className={style.contentCard}>{formatDate(chat.dateTime.toString())}</h6>
               </div>
             </div>
-            <div className={style.contentCard}>
+            <div className={style.contentCard} >
               {chat.description}
             </div>
-            <div></div>
+            <Link href={chat.link} underline="none">
+              <Button
+                variant="contained"
+                
+                sx={{
+                  backgroundColor:lightTheme.colors.primary,
+                  color: lightTheme.colors.text,
+                  textTransform: "none", // Keeps the text as is (not all caps)
+                  fontSize: "16px",      // Slightly larger text for better readability
+                  padding: "8px 16px",   // Adds spacing for a comfortable click area
+                  borderRadius: "8px",   // Rounded corners for a modern look
+                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Adds a subtle shadow
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 0, 0, 0.2)", // Darker shade for hover effect
+                    boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.2)", // Enhanced shadow on hover
+                  },
+                }}
+              >
+                Go Visit Event Page
+              </Button>
+            </Link>
           </div>
         );
       })}

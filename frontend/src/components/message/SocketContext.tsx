@@ -1,9 +1,9 @@
 // SocketContext.tsx
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { MessageComponentType } from '../../types';
+import { MessageComponentType, EventSocket } from '../../types';
 import { RecentChat } from '../../types';
-//import { useBackground } from './BackgroundContext';
+import { useBackground } from './BackgroundContext';
 import { handleGetPostByPostId } from '../../sercives/api';
 const socket = io('http://localhost:4000');
 
@@ -11,6 +11,8 @@ interface SocketContextType {
   socket: Socket;
   messages: MessageComponentType[]
   setMessages: React.Dispatch<React.SetStateAction<MessageComponentType[]>>
+  notiList: EventSocket[]
+  setNotiList: React.Dispatch<React.SetStateAction<EventSocket[]>>
   hasNotification: boolean
   setHasNotification: React.Dispatch<React.SetStateAction<boolean>>
   likePostDetailed: any
@@ -37,8 +39,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [chatbotMessages, setChatbotMessages] = useState<any[]>([])
   const [hasNotification, setHasNotification] = useState<boolean>(false)
   const [likePostDetailed, setLikePostDetailed] = useState<any>(undefined)
+  const [notiList, setNotiList] = useState<EventSocket[]>([])
   const currentEmail = localStorage.getItem("email")
-  //const { setBackgroundImageOver, setSelectedTheme } = useBackground()
+  // const { setBackgroundImageOver, setSelectedTheme } = useBackground()
   useEffect(() => {
     socket.emit("connection", currentEmail)
     socket.emit("register", currentEmail)
@@ -50,7 +53,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
     socket.on("newLikeOnPost", async (like) => {
       debugger;
-      const res = await handleGetPostByPostId(like.postId, localStorage.getItem("userId"))
+      const res = await handleGetPostByPostId(like.postId, localStorage.getItem("user_id"))
       const url = `http://localhost:5000/api/v1/user/info?email=${like.user}`;
       try {
         const response = await fetch(url, {
@@ -63,15 +66,40 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         const data = await response.json();
 
         const now = new Date()
-        const formattedDate = now.toISOString().slice(0, 10);
+        const formattedDate = now
         setHasNotification(true)
-        const likePostDetailed = {
-          "avatar": data.userInfo.avatar,
+        const likePostDetailed: EventSocket = {
+          "userAvatar": data.userInfo.avatar,
           "userName": `${data.userInfo.firstname} ${data.userInfo.lastname}`,
-          "time": formattedDate,
-          "type": like.type
+          "createdAt": formattedDate,
+          "eventType": like.type,
+          "postId": like.postId
         }
 
+
+        const notiQueueString = localStorage.getItem("NotiQueue");
+
+        let notiQueue: any[] = []; // Default value in case "NotiQueue" is not found
+
+        if (notiQueueString) {
+          notiQueue = JSON.parse(notiQueueString);
+          if (notiQueue?.length === 5) {
+            notiQueue.pop()
+            notiQueue.unshift(likePostDetailed)
+          } else {
+            notiQueue.unshift(likePostDetailed)
+          }
+
+          localStorage.setItem("NotiQueue", JSON.stringify(notiQueue))
+
+          setNotiList(notiQueue)
+        } else {
+          notiQueue.unshift(likePostDetailed)
+          localStorage.setItem("NotiQueue", JSON.stringify(notiQueue))
+
+          setNotiList(notiQueue)
+        }
+        
         setLikePostDetailed(likePostDetailed)
       } catch (e) {
         console.error("Error fetching data:", e);
@@ -84,7 +112,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         "_id": message.sendfrom,
         "latestMessage": message.image ? "image" : message.content,
         "timeStamp": new Date().toISOString(),
-        "userInfo": null
+        "userInfo": null,
+        "image": message.image
       }
 
       const url = `http://localhost:5000/api/v1/message/post?senderEmail=${message.sendfrom}&recipentEmail=${currentEmail}&content=${message.content}`
@@ -158,7 +187,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }
 
   return (
-    <SocketContext.Provider value={{ messages, setMessages, socket, recentChats, setRecentChats, sendMessage, chatbotMessages, setChatbotMessages, changeBackground, newComment, newLike, hasNotification, setHasNotification, likePostDetailed, setLikePostDetailed }}>
+    <SocketContext.Provider value={{ notiList, setNotiList,messages, setMessages, socket, recentChats, setRecentChats, sendMessage, chatbotMessages, setChatbotMessages, changeBackground, newComment, newLike, hasNotification, setHasNotification, likePostDetailed, setLikePostDetailed }}>
       {children}
     </SocketContext.Provider>
   );

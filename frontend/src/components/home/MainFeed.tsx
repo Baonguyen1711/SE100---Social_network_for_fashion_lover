@@ -76,7 +76,7 @@ const MainFeed: React.FC<MainFeedProps> = ({ isOpened = true }) => {
 
         const fetchPosts = async () => {
             setLoading(true);
-            const userId = localStorage.getItem("userId");
+            const userId = localStorage.getItem("user_id");
             const url = `http://localhost:5000/api/v1/post/posts/home`;
 
             try {

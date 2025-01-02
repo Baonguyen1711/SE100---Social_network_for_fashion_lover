@@ -3,6 +3,7 @@ const router = express.Router()
 
 const registerController = require('../controllers/auth/RegisterController')
 const {validate, checkDuplicate} = require('../middlewares/auth/register')
+const dbMiddleware = require('../middlewares/dbConnection')
 
 router.use(express.json())
 router.use('/', registerController.create)

@@ -1,5 +1,6 @@
 //
 
+
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoutes from "./components/auth/ProtectedRoutes";
@@ -20,16 +21,20 @@ import PostsDisplay from "./components/profile/Post/PostsDisplay";
 import FollowingDisplay from "./components/profile/Following/FollowingDisplay";
 import FollowerDisplay from "./components/profile/Following/FollowerDisplay";
 
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <SocketProvider>
         <BackgroundProvider>
+          <SnackbarProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/explore" element={<ExplorePage />} />
-            <Route path="/message/:userEmail?" element={<MessagePage />} />
+
+            <Route path="/forgot-password" element={<ForgetPasswordPage />} />
+            <Route path="/explore" element={<ProtectedRoutes element={<ExplorePage />} />} />
+            <Route path="/message/:userEmail?" element={<ProtectedRoutes element={<MessagePage />} />}/>
             <Route path="/profile/:userId" element={<ProfilePage />}>
               <Route
                 index
@@ -48,12 +53,13 @@ const App = () => {
                 element={<ProtectedRoutes element={<FollowerDisplay />} />}
               />
             </Route>
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/favourite" element={<FavouritePage />}>
-              <Route index element={<FavouriteGeneral />} />
-              <Route path="posts" element={<FavouritePostsDisplay />} />
+            <Route path="/home" element={<ProtectedRoutes element={<HomePage />} />}/>
+            <Route path="/favourite" element={<ProtectedRoutes element={<FavouritePage />} />}>
+              <Route index element={<ProtectedRoutes element={<FavouriteGeneral />} />} />
+              <Route path="posts" element={<ProtectedRoutes element={<FavouritePostsDisplay />} />}/>
             </Route>
           </Routes>
+          </SnackbarProvider>          
         </BackgroundProvider>
       </SocketProvider>
     </ThemeProvider>

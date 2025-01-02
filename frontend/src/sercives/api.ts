@@ -1,11 +1,13 @@
 import React from "react";
+import { EventSocket } from "../types";
+import { io, Socket } from "socket.io-client";
+const socket = io("http://localhost:4000");
 
 export const register = (body: object) => {
   const url = "http://127.0.0.1:5000/api/v1/register";
 };
 
-export const getUserByUserId = async () => {
-  const userId = localStorage.getItem("user_id")
+export const getUserByUserId = async (userId = localStorage.getItem("user_id")) => {
   const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
   try {
     const response = await fetch(url, {
@@ -75,7 +77,7 @@ export async function handleLikePost(postId: string | undefined) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
+        userId: localStorage.getItem("user_id"),
         targetId: postId,
         targetType: "post",
       }),
@@ -188,7 +190,7 @@ export async function createPostUserRelationship(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: localStorage.getItem("userId"),
+        userId: localStorage.getItem("user_id"),
         postId: postId,
       }),
     });
@@ -263,32 +265,128 @@ export async function handleGetPostByPostId(postId: String | null | undefined, u
   }
 }
 
+// export async function handleLikeAPI(postId: string | undefined, type: string) {
+
+//   try {
+//     const response = await fetch(
+//       "http://localhost:5000/api/v1/like/likepost",
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           userId: localStorage.getItem("user_id"),
+//           targetId: postId,
+//           targetType: type,
+//         }),
+//       }
+//     );
+//     if (!response.ok) {
+//       throw new Error("Failed to like post");
+//     }
+//     const result = await response.json();
+//     //setCurrentPost(result.updatedPost);
+//     //setPost(result.updatedPost);
+//     //setIsLiked(result.updatedPost.isLiked)
+//     return result
+//   } catch (e) {
+//     console.error(e);
+//   }
+// }
+
 export async function handleLikeAPI(postId: string | undefined, type: string) {
 
-  try {
-    const response = await fetch(
-      "http://localhost:5000/api/v1/like/likepost",
-      {
+  const handleSocketEmit = async (eventSocketList: EventSocket[]) => {
+
+    const url = `http://127.0.0.1:5000/api/v1/notification/create`
+
+    try {
+      debugger;
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: localStorage.getItem("user_id"),
-          targetId: postId,
-          targetType: type,
-        }),
+        body: JSON.stringify(eventSocketList)
+      })
+
+      if (!response.ok) {
+        console.log("error in posting event")
       }
-    );
+
+      console.log("posting event successfully")
+    } catch (e) {
+      console.log("error", e)
+    }
+
+  }
+  try {
+    const response = await fetch("http://localhost:5000/api/v1/like/likepost", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: localStorage.getItem("user_id"),
+        targetId: postId,
+        targetType: type,
+      }),
+    });
     if (!response.ok) {
       throw new Error("Failed to like post");
     }
-    const result = await response.json();
-    //setCurrentPost(result.updatedPost);
-    //setPost(result.updatedPost);
-    //setIsLiked(result.updatedPost.isLiked)
-    return result
-  } catch (e) {
+
+    debugger;
+    const res = await handleGetPostByPostId(
+      postId,
+      localStorage.getItem("user_id")
+    );
+    const postOwnerEmail = res.userInfo.email;
+    console.log("res", res);
+    const like = {
+      userEmail: localStorage.getItem("email"),
+      postOwnerEmail: postOwnerEmail,
+      postId: postId,
+      type: "like",
+    };
+
+
+      const infoUrl = `http://localhost:5000/api/v1/user/info?email=${localStorage.getItem("email")}`;
+      try {
+        const response = await fetch(infoUrl, {
+          method: "GET",
+        });
+        if (!response.ok) {
+          throw new Error("Error in getting user");
+        }
+
+        const data = await response.json();
+
+        const userAvatar = data.userInfo.avatar
+        const userName = `${data.userInfo.firstname} ${data.userInfo.lastname}`
+        const event: EventSocket = {
+          eventType: "like",
+          postId: postId,
+          userName: userName,
+          userAvatar: userAvatar,
+          createdAt: new Date,
+          postOwnerEmail: postOwnerEmail
+        }
+
+        handleSocketEmit([event])
+      } catch(e) {
+        console.log(e)
+      }
+
+    socket.emit("newLike", like);
+      const result = await response.json();
+      //setCurrentPost(result.updatedPost);
+      //setPost(result.updatedPost);
+      //setIsLiked(result.updatedPost.isLiked)
+      return result;
+    
+  }catch (e) {
     console.error(e);
   }
 }

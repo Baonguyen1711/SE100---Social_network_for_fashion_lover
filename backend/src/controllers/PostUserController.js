@@ -8,7 +8,7 @@ class PostUserController {
   //[POST]
   async toggleSavePost(req, res) {
     try {
-      connectToDb();
+      
       const { postId, userId } = req.body;
       console.log("ddddd", postId, userId);
       if (!userId || !postId) {
@@ -63,7 +63,7 @@ class PostUserController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: "Invalid userId format", userId });
       }
-      connectToDb();
+      
       const posts = await PostUser.aggregate([
         {
           $match: {
@@ -190,7 +190,7 @@ class PostUserController {
           .status(400)
           .send({ error: "Invalid postUserId format", postUserId });
       }
-      connectToDb();
+      
       const updatedPostUser = await PostUser.findByIdAndUpdate(
         postUserId,
         { isDeleted: true, updatedAt: new Date() },

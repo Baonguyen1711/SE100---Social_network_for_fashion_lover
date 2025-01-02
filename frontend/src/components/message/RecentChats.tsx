@@ -35,44 +35,44 @@ interface JsonImage {
   _id: string;
 }
 
-// const imageData = [
-//   {
-//     img: "https://plus.unsplash.com/premium_photo-1664202526559-e21e9c0fb46a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-//     title: 'Breakfast',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-//     title: 'Burger',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-//     title: 'Camera',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-//     title: 'Coffee',
-//   },
-//   {
-//     img: "https://plus.unsplash.com/premium_photo-1675186049419-d48f4b28fe7c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
-//     title: 'Hats',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
-//     title: 'Honey',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
-//     title: 'Basketball',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
-//     title: 'Fern',
-//   },
-//   {
-//     img: "https://images.unsplash.com/photo-1477064996809-dae46985eee7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDd8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
-//     title: 'Mushrooms',
-//   }
-// ];
+const imageDataArray = [
+  {
+    img: "https://plus.unsplash.com/premium_photo-1664202526559-e21e9c0fb46a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    title: 'Breakfast',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    title: 'Burger',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    title: 'Camera',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    title: 'Coffee',
+  },
+  {
+    img: "https://plus.unsplash.com/premium_photo-1675186049419-d48f4b28fe7c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFzaGlvbnxlbnwwfHwwfHx8MA%3D%3D",
+    title: 'Hats',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+    title: 'Honey',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+    title: 'Basketball',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+    title: 'Fern',
+  },
+  {
+    img: "https://images.unsplash.com/photo-1477064996809-dae46985eee7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDd8fGZhc2hpb258ZW58MHx8MHx8fDA%3D",
+    title: 'Mushrooms',
+  }
+];
 
 // const RoundButton = styled(Button)(({ theme }) => ({
 //   minWidth: 0,
@@ -99,15 +99,16 @@ const SideBar = () => {
   const { setSelectedUserEmail } = useSelectedUser()
   const [recentChats, setRecentChats ] = useState<RecentChat[]>([])
   const { setBackgroundImageOver, isPaletteOpen, setIsPaletteOpen, setSelectedTheme } = useBackground()
-  const [imageData, setImageData] = useState<image[]>([])
+  const [imageData, setImageData] = useState<image[]>(imageDataArray)
   const [dataArray, setDataArray] = useState<message[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedId, setSelectedId] = useState<string>("")
   const [backgroundColor, setBackgroundColor] = useState<string>(lightTheme.colors.background)
   const nav = useNavigate()
-  const [selectedUserAvatar, setSelectedUserAvatar] = useState<string>("")
+  const [selectedUserAvatar, setSelectedUserAvatar] = useState<string|undefined>("")
   const [selectedUserFirstName, setSelectedUserFirstName] = useState<string>("")
   const [selectedUserLastName, setSelectedUserLastName] = useState<string>("")
+  const tempBackground: { [key: string]: string } = {};
   useEffect(() => {
     const fetchData = async () => {
       debugger;
@@ -224,6 +225,7 @@ const SideBar = () => {
 
 
       const url = `http://127.0.0.1:5000/api/v1/message/recent?email=${email}`
+
       try {
 
 
@@ -236,13 +238,17 @@ const SideBar = () => {
           throw new Error(`Error in getting message`);
         }
 
-
+        debugger;
         const data = await response.json()
-        const recentMessages = data.recentMessages
+        const recentMessages:RecentChat[] = data.recentMessages
         console.log("data", data)
         console.log("recentMessages", recentMessages)
-        const selectedUserAvatar = recentMessages[0].userInfo.avatar
-        const emailExists = recentChats.some(chat => chat._id === selectedUserEmail);
+        if (recentMessages.length > 0) {
+          const selectedUserAvatar = recentMessages[0]?.userInfo?.avatar; // Use optional chaining
+          setSelectedUserAvatar(selectedUserAvatar)
+          console.log("Selected User Avatar:", selectedUserAvatar);
+        }
+        const emailExists = recentMessages.some(chat => chat.userInfo?.email === selectedUserEmail);
         if(!emailExists && selectedUserEmail) {
           var firstname = ''
           var lastname=''
@@ -284,7 +290,6 @@ const SideBar = () => {
           recentMessages.push(newRecentChat)
         }
         console.log("selectedUserAvatar", selectedUserAvatar)
-        setSelectedUserAvatar(selectedUserAvatar)
         setRecentChats(recentMessages)
 
 
@@ -306,64 +311,64 @@ const SideBar = () => {
 
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  // useEffect(() => {
+  //   const fetchData = async () => {
 
-      debugger;
-      const url = `http://127.0.0.1:5000/api/v1/message/conversation/get?senderEmail=${email}&recipentEmail=${selectedUserEmail}`
-      try {
-
-
-
-        const response = await fetch(url, {
-          method: "GET"
-        })
-
-        if (!response.ok) {
-          throw new Error(`Error in getting background`);
-        }
+  //     debugger;
+  //     const url = `http://127.0.0.1:5000/api/v1/message/conversation/get?senderEmail=${email}&recipentEmail=${selectedUserEmail}`
+  //     try {
 
 
-        const data = await response.json()
-        const backgroundImage = data.image
-        const theme = data.theme
 
-        setBackgroundImageOver(backgroundImage)
-        setSelectedTheme(theme)
-      } catch (e) {
-        console.log("Some errors happen", e)
-        return []
-      } finally {
-        setLoading(false)
-      }
-    };
+  //       const response = await fetch(url, {
+  //         method: "GET"
+  //       })
 
-    // const getBackgroundImage = async () => {
-    //   const url = `http://localhost:5000/api/v1/image/get?type=messageBackground&senderEmail=${email}&recipentEmail=${selectedUserEmail}`
-
-    //   const response = await fetch(url, {
-    //     method: "GET"
-    //   })
-
-    //   if (!response.ok) {
-    //     throw new Error(`Error in getting image`);
-    //   }
-    //   var newArray = []
-    //   const data = await response.json()
-    //   if (data.backgroundImages.length > 0) {
-    //     newArray = data.backgroundImages.map((item: JsonImage) => ({ "img": item.link, "title": item.name }));
-    //   }
-
-    //   setImageData(newArray)
-    //   console.log(newArray)
-    // }
-
-    // getBackgroundImage()
-
-    fetchData();
+  //       if (!response.ok) {
+  //         throw new Error(`Error in getting background`);
+  //       }
 
 
-  }, [selectedUserEmail]);
+  //       const data = await response.json()
+  //       const backgroundImage = data.image
+  //       const theme = data.theme
+
+  //       setBackgroundImageOver(backgroundImage)
+  //       setSelectedTheme(theme)
+  //     } catch (e) {
+  //       console.log("Some errors happen", e)
+  //       return []
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   };
+
+  //   const getBackgroundImage = async () => {
+  //     const url = `http://localhost:5000/api/v1/image/get?type=messageBackground&senderEmail=${email}&recipentEmail=${selectedUserEmail}`
+
+  //     const response = await fetch(url, {
+  //       method: "GET"
+  //     })
+
+  //     if (!response.ok) {
+  //       throw new Error(`Error in getting image`);
+  //     }
+  //     var newArray = []
+  //     const data = await response.json()
+  //     if (data.backgroundImages.length > 0) {
+  //       newArray = data.backgroundImages.map((item: JsonImage) => ({ "img": item.link, "title": item.name }));
+  //     }
+
+  //     setImageData(newArray)
+  //     console.log(newArray)
+  //   }
+
+  //   getBackgroundImage()
+
+  //   fetchData();
+
+
+  // }, [selectedUserEmail]);
 
   if (loading) {
     return (
@@ -405,8 +410,9 @@ const SideBar = () => {
 
         <List sx={{ width: '100%', maxWidth: 360, bgcolor: lightTheme.colors.background }}>
           {
-            recentChats.map((message) => (
-              <ListItem
+            recentChats.map((message) => {
+              console.log("recent message", message)
+              return <ListItem
                 key={message._id}
 
                 onClick={() => {
@@ -456,7 +462,7 @@ const SideBar = () => {
 
                 </Typography>
               </ListItem>
-            ))
+})
           }
 
         </List>
@@ -510,8 +516,16 @@ const SideBar = () => {
                   onClick={
                     () => {
                       debugger;
+                      console.log("item.img", item.img)
                       setBackgroundImageOver(item.img)
                       setIsPaletteOpen(!isPaletteOpen)
+                      
+                      
+                      var currentBackgrond = JSON.parse(localStorage.getItem("background") ?? "{}")
+                      if(selectedUserEmail) {
+                        currentBackgrond[selectedUserEmail] = item.img
+                      }
+                      localStorage.setItem("background", JSON.stringify(currentBackgrond))
                     }}
 
 
