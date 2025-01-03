@@ -1,5 +1,5 @@
 
-const User = require('../models/user')
+const User = require('../models/User')
 
 const Message = require('../models/Message')
 const mongoose = require('mongoose')
@@ -14,7 +14,7 @@ class MessageController {
 
 
         try {
-            connectToDb()
+            
             console.log(req.body)
             const { email, password, firstName, lastName, phone } = req.body
 
@@ -41,7 +41,7 @@ class MessageController {
 
     async getRencentSender(req, res) {
         try {
-            connectToDb()
+            
 
             const { email } = req.query
 
@@ -147,47 +147,61 @@ class MessageController {
 
     async getChatHistory(req, res) {
         try {
-            connectToDb()
+            
 
             const { senderEmail, recipentEmail } = req.query
 
             console.log(typeof email)
-            // const message = new Message({
-            //     recipentEmail: "Baonguyen2@gmail.com",
-            //     senderEmail: "Baonguyen1@gmail.com",
-                
-            //     content: "MU Vodoi 3",
-            //     sendAt:Date(),
-            //     isDeleted: false
-            // })
+            console.log("recipentEmail", recipentEmail)
+            console.log("type", typeof recipentEmail)
 
-            // console.log(message)
 
-            // await message.save()
-            console.log("senderEmail",senderEmail)
-            console.log("type", typeof senderEmail)
-
+            res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+            res.set('Pragma', 'no-cache');
+            res.set('Expires', '0');
+            res.set('Surrogate-Control', 'no-store');
             const chatHistoryArray = await Message.aggregate([
-                //get all recieved messages
                 {
                     '$match': {
-                        '$expr': {
-                            '$or': [
-                                {
-                                    'recipentEmail': recipentEmail,
-                                    'senderEmail': senderEmail,
-                                    'isDeleted': false
-                                },
-                                {
-                                    'recipentEmail': senderEmail,
-                                    'senderEmail': recipentEmail,
-                                    'isDeleted': false
-                                },
+                      '$expr': {
+                        '$or': [
+                          {
+                            '$and': [
+                              {
+                                '$eq': [
+                                  '$recipentEmail', senderEmail
+                                ]
+                              }, {
+                                '$eq': [
+                                  '$senderEmail', recipentEmail
+                                ]
+                              }, {
+                                '$eq': [
+                                  '$isDeleted', false
+                                ]
+                              }
                             ]
-                        }
-                        
+                          }, {
+                            '$and': [
+                              {
+                                '$eq': [
+                                  '$recipentEmail', recipentEmail
+                                ]
+                              }, {
+                                '$eq': [
+                                  '$senderEmail', senderEmail
+                                ]
+                              }, {
+                                '$eq': [
+                                  '$isDeleted', false
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
                     }
-                },
+                  },
                 {
                     '$addFields': {
 
@@ -205,19 +219,11 @@ class MessageController {
                 {
                     '$limit': 10
                 }
-                // {
-                //     '$group': {
-                //         '_id': null,
-                //         'isSender': {'$first': '$isSender'},
-                //         'content': {'$first': '$content'},
-                //         'timeStamp': {'$first': '$sendAt'}
-                //     }
-                // }
             ])
 
-            const chatHistory = chatHistoryArray.length>0? chatHistoryArray:[]
-            
-            console.log("chatHistory",chatHistory)
+            const chatHistory = chatHistoryArray.length > 0 ? chatHistoryArray : []
+
+            console.log("chatHistory", chatHistory)
 
             res.json({
                 'chatHistory': chatHistory
@@ -225,12 +231,12 @@ class MessageController {
         } catch (e) {
             console.log(e)
         }
-    }
+    }   
 
     async saveMessage(req,res) {
         try {
 
-            connectToDb()
+            
             const {senderEmail, recipentEmail, content} = req.query
 
             const newMessage = new Message({
@@ -252,7 +258,7 @@ class MessageController {
 
     // async getRencentMessage(req,res) {
     //     try {
-    //         connectToDb()
+    //         
 
             
     //     } catch(e) {

@@ -39,6 +39,16 @@ export interface Recipent {
   recipentEmail: string | null;
   senderEmail: string | null;
   content: string | null;
+  image?: string
+}
+
+export interface  EventSocket {
+  eventType: string,
+  postId: string | null | undefined,
+  createdAt: Date,
+  userName: string,
+  userAvatar: string,
+  postOwnerEmail?: string
 }
 
 export interface MessageComponentType {
@@ -61,6 +71,7 @@ export interface RecentChat {
 
     avatar: string | undefined;
   } | null;
+  image?: string
 }
 
 export interface Recipent {
@@ -98,6 +109,7 @@ export interface Event {
   createdBy: string;
   createdAt: string;
   isDelete: boolean;
+  link: string;
 }
 
 export interface Post {

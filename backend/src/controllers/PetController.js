@@ -9,7 +9,7 @@ class PetController {
   //[POST]
   async create(req, res) {
     try {
-      connectToDb();
+      
       const {
         userId,
         name,
@@ -88,7 +88,7 @@ class PetController {
           .json({ message: "Not enough required information!" });
       }
       
-      connectToDb();
+      
       const updatedPet = await Pet.findByIdAndUpdate(
         petId,
         {
@@ -129,7 +129,7 @@ class PetController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: 'Invalid userId format',userId });
     }
-      connectToDb();
+      
       const pets = await Pet.aggregate([
         {
           $match: {
@@ -185,7 +185,7 @@ class PetController {
   //     if (!ObjectId.isValid(userId)) {
   //       return res.status(400).send({ error: 'Invalid userId format',userId });
   //   }
-  //     connectToDb();
+  //     
   //     const pets = await PetUser.aggregate([
   //       {
   //         $match: {
@@ -251,7 +251,7 @@ class PetController {
       if (!ObjectId.isValid(petId)) {
         return res.status(400).send({ error: 'Invalid petId format',petId });
     }
-      connectToDb();
+      
       const updatedPet = await Pet.findByIdAndUpdate(
         petId,
         { isDeleted: true, updatedAt: new Date() },

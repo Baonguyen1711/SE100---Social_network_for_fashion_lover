@@ -8,7 +8,7 @@ class EventController {
   async create(req, res) {
     console.log("Create example");
     try {
-      connectToDb();
+      
       console.log(req.body);
       const { eventName,
         description,
@@ -45,7 +45,6 @@ class EventController {
   async getAllEvent(req, res) {
     try {
       // Đảm bảo kết nối được thiết lập
-      await connectToDb();
   
       // Lấy tất cả sự kiện chưa bị xóa và sắp xếp theo thời gian cập nhật mới nhất
       const upcomingEventArray = await Event.aggregate([

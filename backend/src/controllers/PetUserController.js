@@ -8,7 +8,7 @@ class PetUserController {
   //[POST]
   async create(req, res) {
     try {
-      connectToDb();
+      
       const { petId, userId } = req.body;
       console.log("sdkadhs", petId, userId);
       if (!userId || !petId) {
@@ -61,7 +61,7 @@ class PetUserController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: "Invalid userId format", userId });
       }
-      connectToDb();
+      
       const pets = await PetUser.aggregate([
         {
           $match: {
@@ -171,7 +171,7 @@ class PetUserController {
           .status(400)
           .send({ error: "Invalid petUserId format", petUserId });
       }
-      connectToDb();
+      
       const updatedPetUser = await PetUser.findByIdAndUpdate(
         petUserId,
         { isDeleted: true, updatedAt: new Date() },

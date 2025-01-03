@@ -51,6 +51,7 @@ const DetailPostHomeModal: React.FC<Props> = ({ post, onClose }) => {
         }
     };
     const handleAddComment = (newComment: IComment | undefined) => {
+        debugger;
         if (!newComment) return;
         setNewCommentsArray((prev) =>
             prev ? [...prev, newComment] : [newComment]
@@ -59,7 +60,7 @@ const DetailPostHomeModal: React.FC<Props> = ({ post, onClose }) => {
     };
     const handleSavePost = async () => {
         const reponse = await createPostUserRelationship(currentPost?._id);
-        const userId = localStorage.getItem("userId");
+        const userId = localStorage.getItem("user_id");
         setCurrentPost(await handleGetPostByPostId(currentPost?._id, userId));
     };
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);

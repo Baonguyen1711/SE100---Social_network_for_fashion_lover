@@ -26,15 +26,18 @@
 }
 
 .headerContent h4 {
+  color: rgba(0,0,0,0.5);
   margin: 0;
 }
 .headerContent h6 {
-  color: #c893f5;
+  color: rgba(0,0,0,0.3);
   font-size: 14px;
 }
 
 .contentCard {
   padding: 5px 0px;
+  color: black;
+  font-family: Inter;
 }
 
 .footerCard {
