@@ -38,7 +38,7 @@ const CommentBar = forwardRef<HTMLInputElement, Props>((props, ref) => {
     if (fields.content === "") {
       return;
     }
-    console.log("dsadsajasdskdajkdjsadkjs", fields)
+    //console.log("dsadsajasdskdajkdjsadkjs", fields)
     //setLoading(true);
     try {
       const url = `http://localhost:5000/api/v1/comment/create`;

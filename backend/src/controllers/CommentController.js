@@ -11,7 +11,7 @@ class CommentController {
     try {
       connectToDb();
       const { content, postId, userId, parentId } = req.body;
-      //console.log("content, postId, userId, parentId",content, postId, userId, parentId)
+      console.log("content, postId, userId, parentId",content, postId, userId, parentId)
       const validatedParentId = ObjectId.isValid(parentId) ? parentId : null;
       if (!content || !postId || !userId) {
         return res.status(400).json({
@@ -86,6 +86,7 @@ class CommentController {
           message: "Missing required fields: postId,userId",
         });
       }
+      //console.log(,postId,userId)
       const comments = await Comment.aggregate([
         { $match: { postId: new ObjectId(`${postId}`),isDeleted:false } },
         {

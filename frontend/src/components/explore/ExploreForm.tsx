@@ -14,7 +14,7 @@ const Explore = () => {
   const [selectedImage, setSelectedImage] = useState<Post | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const userId = localStorage.getItem("user_id")
+      const userId = localStorage.getItem("userId")
       const url = `http://localhost:5000/api/v1/post/posts?userId=${userId}`;
       try {
         const response = await fetch(url, {

@@ -5,7 +5,7 @@ export const register = (body: object) => {
 };
 
 export const getUserByUserId = async () => {
-  const userId = localStorage.getItem("user_id")
+  const userId = localStorage.getItem("userId")
   const url = `http://localhost:5000/api/v1/user/getbyid?userId=${userId}`;
   try {
     const response = await fetch(url, {

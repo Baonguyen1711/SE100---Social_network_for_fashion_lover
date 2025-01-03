@@ -49,10 +49,6 @@ const ProposalCommentContainer: React.FC<props> = (props) => {
             console.error("Error fetching data:", e);
         }
     };
-    // const handleDelete = async (id:string|undefined) => {
-    //   const response = await handleDeleteCommentAPI(id);
-    //   if(response) setComments((prev)=>{return prev.filter(comment=>comment._id!=response.deletedComment)})
-    // }
     return (
         <>
             <div className={style.container}>
