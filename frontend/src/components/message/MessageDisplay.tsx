@@ -23,7 +23,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
   //const { selectedUserEmail } = useSelectedUser()
   const [recentMessages, setRecentMessages] = useState<MessageComponentType[]>([])
   const { messages, setMessages, chatbotMessages, setChatbotMessages } = useSocket();
-  const { backgroundImageOver, setPalette, setBackgroundImageOver } = useBackground()
+  const { backgroundImageOver, setPalette } = useBackground()
   //const [selectedUserEmail, setSelectedUserEmail] = useState<string|undefined>("")
   const selectedUserEmail = useParams().userEmail
   const imgRef = useRef<HTMLImageElement>(null);
@@ -43,26 +43,16 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
 
   }, [backgroundImageOver])
 
-  useEffect(()=>{
-    const tempBackground: { [key: string]: string } = JSON.parse(localStorage.getItem("background") ?? "{}")
-    if(selectedUserEmail && selectedUserEmail in tempBackground) {
-      setBackgroundImageOver(tempBackground[selectedUserEmail])
-    } else {
-      setBackgroundImageOver("")
-    }
-    
-  },[selectedUserEmail])
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  useEffect(() => {
+  useEffect(()=> {
     debugger;
     setMessages([])
-  }, [selectedUserEmail])
+  },[selectedUserEmail])
   useEffect(() => {
 
     const getMessagesHistory = async () => {
@@ -70,7 +60,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
         return
       }
       debugger;
-      const url = `http://localhost:5000/api/v1/message/history?senderEmail=${selectedUserEmail}&recipentEmail=${recipentEmail}`
+      const url = `127.0.0.1:5000/api/v1/message/history?senderEmail=${selectedUserEmail}&recipentEmail=${recipentEmail}`
 
       try {
         const response = await fetch(url)
@@ -85,7 +75,7 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
         const data = await response.json()
         setRecentMessages(data.chatHistory.reverse())
 
-        console.log("messages", messages)
+        console.log("messages",messages)
       } catch (e) {
         console.log("Some errors happen", e)
       }
@@ -113,52 +103,64 @@ const MessageDisplay: React.FC<MessageComponentArray> = ({ isChatbot }) => {
       sx={{
         overflowY: "scroll",
         backgroundImage: `url(${backgroundImageOver})`,
-        backgroundSize: "cover",
-        objectFit: "cover"
+        backgroundSize: "cover"
       }}
     >
       {
-
-        [...recentMessages, ...messages].map((message) => {
-          console.log("Message Image URL:", message.image)
-          return message.image ?
-
-            <Box
-              component="div"
-              sx={{
-                display: "flex",
-                justifyContent: message.isSender ? "flex-start" : "flex-end",
-                margin: "10px",
-              }}
-            >
+        !isChatbot ?
+          [...recentMessages, ...messages].map((message) => {
+            debugger;
+            console.log("Message Image URL:", message.image)
+            return message.image ?
+              
               <Box
-                component="img"
-                src={message.image}
-                alt="Uploaded"
+                component="div"
                 sx={{
-                  maxWidth: "200px",       // Adjust maximum width
-                  maxHeight: "200px",      // Adjust maximum height
-                  borderRadius: "8px",     // Rounded corners
-                  objectFit: "cover",      // Ensures image fills the box neatly
-                  boxShadow: 2,            // Adds a slight shadow for aesthetics
+                  display: "flex",
+                  justifyContent: message.isSender ? "flex-start" : "flex-end",
+                  margin: "10px",
                 }}
-              />
-            </Box>
+              >
+                <Box
+                  component="img"
+                  src={message.image}
+                  alt="Uploaded"
+                  sx={{
+                    maxWidth: "200px",       // Adjust maximum width
+                    maxHeight: "200px",      // Adjust maximum height
+                    borderRadius: "8px",     // Rounded corners
+                    objectFit: "cover",      // Ensures image fills the box neatly
+                    boxShadow: 2,            // Adds a slight shadow for aesthetics
+                  }}
+                />
+              </Box>
 
 
-            :
-            message.content !== "" ?
+              :
+              message.content!==""?
               <MessageComponent
                 key={message.timeStamp}
                 content={message.content}
                 timeStamp={new Date(message.timeStamp).toLocaleString().slice(0, 9)}
                 isSender={message.isSender}
+                isChatbot={false}
               />
               :
               null
 
-        })
+})
+          :
+          [...chatbotMessages].map((message) => (
 
+            <MessageComponent
+              key={message.timeStamp}
+              content={message.content}
+              timeStamp={new Date(message.timeStamp).toLocaleString().slice(0, 9)}
+              isSender={message.isSender}
+              isChatbot={true}
+            />
+
+          ))
       }
 
     </Box>

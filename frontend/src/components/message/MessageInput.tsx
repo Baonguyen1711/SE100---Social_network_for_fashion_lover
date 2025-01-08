@@ -11,7 +11,8 @@ import { lightTheme } from '../../themes/theme';
 import uploadToCloudinary from '../profile/UploadImage';
 
 interface MessageInputProps {
-  recipent: Recipent | null
+  recipent: Recipent | null,
+  isChatbot: boolean
 }
 
 
@@ -38,7 +39,7 @@ interface message {
 //     name: "Baonguyen"
 // }
 
-const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ recipent, isChatbot }) => {
 
   const [message, setMessage] = useState<string>("");
   const { messages, setMessages, sendMessage, chatbotMessages, setChatbotMessages } = useSocket();
@@ -67,13 +68,14 @@ const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
         content: "",
         timeStamp: new Date().toISOString(),
         isSender: false,
+        isChatbot: false,
         image: imageLink, // Set the uploaded image link
       };
   
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
 
-      const url = `http://localhost:5000/api/v1/message/post?senderEmail=${currentEmail}&recipentEmail=${sentMessage?.recipentEmail}&content=${message}&image=${imageLink}`
+      const url = `127.0.0.1:5000/api/v1/message/post?senderEmail=${currentEmail}&recipentEmail=${sentMessage?.recipentEmail}&content=${message}&image=${imageLink}`
         console.log("send Mesage", sentMessage)
         sendMessage(sentMessage)
         if(sentMessage){
@@ -117,6 +119,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     debugger;
     e.preventDefault();
+    if (!isChatbot) {
       if (message) {
         debugger;
         const sentMessage = recipent
@@ -127,11 +130,12 @@ const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
         const newMessage: MessageComponentType = {
           content: message,
           timeStamp: new Date().toISOString(),
-          isSender: false
+          isSender: false,
+          isChatbot: false
         }
         setMessages((prevMessages) => [...prevMessages, newMessage])
 
-        const url = `http://localhost:5000/api/v1/message/post?senderEmail=${currentEmail}&recipentEmail=${selectedUserEmail}&content=${message}`
+        const url = `127.0.0.1:5000/api/v1/message/post?senderEmail=${currentEmail}&recipentEmail=${selectedUserEmail}&content=${message}`
         console.log("send Mesage", sentMessage)
         sendMessage(sentMessage)
         setMessage("")
@@ -147,7 +151,42 @@ const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
 
        
       }
- 
+      
+    } else {
+      const newMessage: MessageComponentType = {
+        content: message,
+        timeStamp: new Date().toISOString(),
+        isSender: false,
+        isChatbot: true
+      }
+      setChatbotMessages((prevMessages) => [...prevMessages, newMessage])
+
+      const url = `127.0.0.1:5000/api/v1/chatbot/?input=${message}`
+      try {
+        debugger;
+        const response = await fetch(url)
+
+        if (!response.ok) {
+          console.log("Fail to post message")
+        }
+
+        const data = await response.json()
+        const responseMessage = data.message
+
+        const chatbotMessage: MessageComponentType = {
+          content: convertMarkdownToHtml(responseMessage),
+          timeStamp: new Date().toISOString(),
+          isSender: true,
+          isChatbot: true
+        }
+
+        setChatbotMessages((prevMessages) => [...prevMessages, chatbotMessage ])
+        setMessage(" ");
+      } catch (e) {
+        console.log("Some errors happen", e)
+      }
+
+    }
     debugger;
     
   }
@@ -162,6 +201,23 @@ const MessageInput: React.FC<MessageInputProps> = ({ recipent }) => {
       bgcolor={lightTheme.colors.background}
     >
       {
+        isChatbot?
+        <Box
+        padding="10px"
+        height="100%"
+        bgcolor={lightTheme.colors.background}
+        width="100%"
+        component="form"
+
+        onSubmit={(e) => handleSubmit(e)}
+
+        sx={{ display: 'flex', justifyContent: "space-around", alignItems: "center", padding: "0px 10px" }}>
+        
+        {/* <EmojiEmotionsOutlined sx={{ color: 'action.active', mr: 1, my: 0.5, flexGrow: 1 }} /> */}
+        <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="input-with-sx" label="Type your question here" variant="standard" sx={{ flexGrow: 4 }} />
+        {/* <SendOutlined sx={{ color: 'action.active', mr: 1, my: 0.5, flexGrow: 1 }} /> */}
+      </Box> 
+        :
         <Box
         padding="10px"
         height="100%"

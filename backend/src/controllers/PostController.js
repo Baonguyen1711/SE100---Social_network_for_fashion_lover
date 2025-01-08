@@ -147,6 +147,10 @@ class PostController {
             userAccessId,
           });
       }
+
+      
+
+
       
 
       const user = await User.findById(targetId, { avatar: 1 });
@@ -298,9 +302,9 @@ class PostController {
   async getPostsByFollowedUsers(req, res) {
     try {
       const { userId } = req.params;
-      if (!ObjectId.isValid(userId)) {
-        return res.status(400).send({ error: "Invalid userId format", userId });
-      }
+      // if (!ObjectId.isValid(userId)) {
+      //   return res.status(400).send({ error: "Invalid userId format", userId });
+      // }
       
 
       const followedUsers = await Follow.find(

@@ -9,6 +9,7 @@ const commentEndPoint = require('./comment')
 const likeEndPoint = require('./like')
 const userEndPoint = require('./user')
 const notificationEndpoint = require('./notification')
+const chatbotEndpoint = require('./chatbot')
 
 function api(app) {
 
@@ -26,6 +27,8 @@ function api(app) {
     app.use('/api/v1/comment',commentEndPoint)
     app.use('/api/v1/user', userEndPoint)
     app.use('/api/v1/notification', notificationEndpoint)
+    
+    app.use('/api/v1/chatbot', chatbotEndpoint)
 }
 
 module.exports = api
