@@ -178,6 +178,7 @@ const getStoriesByFollowingUsers = async (req, res) => {
                     expiryTime: 1, // Bao gồm trường expiryTime
                     createdAt: 1,
                     userId: 1,
+                    isViewed: 1,
                     "userInfo.firstname": 1,
                     "userInfo.lastname": 1,
                     "userInfo.avatar": 1,
