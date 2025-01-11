@@ -11,7 +11,7 @@ class PostController {
   //[POST]
   async create(req, res) {
     try {
-      
+
       const { userId, title, content, imgUrl } = req.body;
       if (!userId || !title || !content) {
         return res
@@ -40,7 +40,7 @@ class PostController {
 
   async getAllPost(req, res) {
     try {
-      
+
       const { userId } = req.query;
       const posts = await Post.aggregate([
         {
@@ -148,10 +148,10 @@ class PostController {
           });
       }
 
-      
 
 
-      
+
+
 
       const user = await User.findById(targetId, { avatar: 1 });
       const posts = await Post.aggregate([
@@ -301,11 +301,11 @@ class PostController {
 
   async getPostsByFollowedUsers(req, res) {
     try {
-      const { userId } = req.params;
+      const { userId } = req.query;
       // if (!ObjectId.isValid(userId)) {
       //   return res.status(400).send({ error: "Invalid userId format", userId });
       // }
-      
+
 
       const followedUsers = await Follow.find(
         {
@@ -472,7 +472,7 @@ class PostController {
       if (!ObjectId.isValid(postId) && !ObjectId.isValid(userAccessId)) {
         return res.status(400).json({ error: "Invalid userAccessId,postId format", userAccessId, postId });
       }
-      
+
       const posts = await Post.aggregate([
         {
           $match: {
@@ -627,7 +627,7 @@ class PostController {
       if (!postId) {
         return res.status(400).json({ error: "postId is required" });
       }
-      
+
       const updatedPost = await Post.findByIdAndUpdate(
         postId,
         { isDeleted: true, updatedAt: new Date() },
@@ -653,7 +653,7 @@ class PostController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: "Invalid userId format", userId });
       }
-      
+
 
       const post = await Post.aggregate([
         {
@@ -760,7 +760,7 @@ class PostController {
           .status(400)
           .json({ message: "Not enough required information!" });
       }
-      
+
 
       const post = await Post.findById(postId)
       if (post) {
@@ -783,7 +783,7 @@ class PostController {
       if (!ObjectId.isValid(userId)) {
         return res.status(400).send({ error: "Invalid userId format", userId });
       }
-      
+
 
       const followedUsers = await Follow.find(
         {
@@ -948,7 +948,7 @@ class PostController {
       if (!ObjectId.isValid(postId) && !ObjectId.isValid(userAccessId)) {
         return res.status(400).json({ error: "Invalid userAccessId,postId format", userAccessId, postId });
       }
-      
+
       const posts = await Post.aggregate([
         {
           $match: {

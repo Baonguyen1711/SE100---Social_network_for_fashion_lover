@@ -91,7 +91,7 @@ const PostsDisplay = () => {
     }, [url]);
     const fetchData = async () => {
         const userId = localStorage.getItem("user_id")
-        const url = `http://127.0.0.1:5000/api/v1/post/getposthome/${userId}`;
+        const url = `http://localhost:5000/api/v1/post/getposthome?userId=${userId}`;
         try {
             const response = await fetch(url, {
                 method: "GET",

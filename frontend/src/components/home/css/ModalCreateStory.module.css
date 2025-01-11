@@ -1,0 +1,90 @@
+/* Modal container styles */
+.modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+}
+
+/* Modal open styles */
+.modalContainer.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Modal content box */
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Modal title */
+.modalTitle {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Upload button styling */
+.uploadButton {
+    margin-bottom: 16px;
+}
+
+/* Media preview styling */
+.mediaPreview {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.previewMedia {
+    max-width: 100%;
+    max-height: 200px;
+    margin-top: 10px;
+}
+
+/* Button container - Flexbox to center buttons */
+.buttonsContainer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+/* Submit button styling (green) */
+.submitButton {
+    background-color: #28a745;
+    color: white;
+    &:hover {
+        background-color: #218838;
+    }
+}
+
+/* Cancel button styling (red) */
+.cancelButton {
+    color: #f44336;
+    border-color: #f44336;
+    &:hover {
+        background-color: #f44336;
+        color: white;
+    }
+}
+
+/* Ensure modal is responsive */
+@media (max-width: 600px) {
+    .modalContent {
+        width: 95%;
+    }
+}

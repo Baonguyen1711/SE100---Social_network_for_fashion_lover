@@ -11,10 +11,13 @@ const dbMiddleware = require("./src/middlewares/dbConnection")
 app.use(cors());
 //app.use(express.json())
 
+const storyRoutes = require("./src/apis/story");
+
 api(app);
 
 app.use(morgan("combined"));
-app.use(dbMiddleware)
+app.use(dbMiddleware);
+app.use("/api/stories", storyRoutes);
 
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -42,42 +45,71 @@ io.on("connection", (socket) => {
     });
   });
 
-    socket.on("register", (email) => {
-        console.log(email)
-        
-        userRegistration[email] = socket.id
-        console.log(userRegistration)
+  socket.on("register", (email) => {
+    console.log(email)
+
+    userRegistration[email] = socket.id
+    console.log(userRegistration)
+  })
+
+  socket.on("newStory", (storyData) => {
+    const recipentId = userRegistration[storyData.recipentEmail]; // Tìm ID người nhận
+    console.log("New Story data", storyData);
+
+    socket.to(recipentId).emit("newStoryNotification", {
+      userEmail: storyData.senderEmail,
+      mediaUrl: storyData.mediaUrl,
+      createdAt: new Date()
+    });
+  });
+
+  socket.on("viewStory", (viewData) => {
+    const recipentId = userRegistration[viewData.recipentEmail];
+    console.log("User viewed the story", viewData);
+
+    socket.to(recipentId).emit("viewStoryNotification", {
+      userEmail: viewData.senderEmail,
+      mediaUrl: viewData.mediaUrl
+    });
+  });
+
+  // Xóa story
+  socket.on("deleteStory", (storyId) => {
+    console.log("Story deleted", storyId);
+
+    // Có thể thông báo cho người nhận về việc story đã bị xóa
+    socket.broadcast.emit("storyDeleted", { storyId });
+  });
+
+
+  socket.on("changeBackground", (image) => {
+    console.log(image)
+    const recipentId = userRegistration[image.recipentEmail]
+    socket.to(recipentId).emit("changeBackground", {
+      "sendFrom": image.senderEmail,
+      "src": image.src,
+      "theme": image.theme
     })
-
-
-    socket.on("changeBackground", (image) => {
-        console.log(image)
-        const recipentId = userRegistration[image.recipentEmail]
-        socket.to(recipentId).emit("changeBackground", {
-            "sendFrom": image.senderEmail,
-            "src": image.src,
-            "theme": image.theme
-        })
-
-    })
-
-    socket.on("newLike", (like) => {
-      console.log("new Like", like)
-      const recipentId = userRegistration[like.postOwnerEmail]
-      console.log("userRegistration", userRegistration)
-      console.log("like.postOwnerEmail", like.postOwnerEmail)
-      console.log("new like recipent id", recipentId)
-      socket.to(recipentId).emit("newLikeOnPost", {
-          "user": like.userEmail,
-          "postId": like.postId,
-          "type": like.type
-      })
 
   })
-  
-    socket.on('disconnect', () => {
-      console.log('A user disconnected');
-    });
+
+  socket.on("newLike", (like) => {
+    console.log("new Like", like)
+    const recipentId = userRegistration[like.postOwnerEmail]
+    console.log("userRegistration", userRegistration)
+    console.log("like.postOwnerEmail", like.postOwnerEmail)
+    console.log("new like recipent id", recipentId)
+    socket.to(recipentId).emit("newLikeOnPost", {
+      "user": like.userEmail,
+      "postId": like.postId,
+      "type": like.type
+    })
+
+  })
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
 
 
 

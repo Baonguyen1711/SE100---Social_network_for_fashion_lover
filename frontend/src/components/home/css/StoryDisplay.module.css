@@ -1,0 +1,36 @@
+.storyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.storyItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.storyAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 4px solid transparent; /* Default border */
+  transition: border 0.3s ease;
+}
+
+.storyName {
+  margin-top: 5px;
+  font-size: 0.75rem;
+}
+
+.read .storyAvatar {
+  border-color: gray; /* Color for viewed stories */
+}
+
+.unread .storyAvatar {
+  border-color: #1e90ff; /* Color for unviewed stories */
+}

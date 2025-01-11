@@ -99,7 +99,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
           setNotiList(notiQueue)
         }
-        
+
         setLikePostDetailed(likePostDetailed)
       } catch (e) {
         console.error("Error fetching data:", e);
@@ -155,7 +155,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
           "content": message.content,
           "timeStamp": new Date().toISOString(),
           "isSender": true,
-          "image": message.image
+          "image": message.image,
+          isChatbot: false,
         }
         return [...prevMessageComponent, newMessageComponent]
       })
@@ -187,7 +188,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }
 
   return (
-    <SocketContext.Provider value={{ notiList, setNotiList,messages, setMessages, socket, recentChats, setRecentChats, sendMessage, chatbotMessages, setChatbotMessages, changeBackground, newComment, newLike, hasNotification, setHasNotification, likePostDetailed, setLikePostDetailed }}>
+    <SocketContext.Provider value={{ notiList, setNotiList, messages, setMessages, socket, recentChats, setRecentChats, sendMessage, chatbotMessages, setChatbotMessages, changeBackground, newComment, newLike, hasNotification, setHasNotification, likePostDetailed, setLikePostDetailed }}>
       {children}
     </SocketContext.Provider>
   );

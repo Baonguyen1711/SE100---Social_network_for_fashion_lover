@@ -11,7 +11,7 @@ class FollowController {
   async createFollow(req, res) {
     try {
       const { followerId, followingId } = req.body;
-      console.log("create follow",followerId,followingId)
+      console.log("create follow", followerId, followingId)
       if (!followerId || !followingId) {
         return res
           .status(400)
@@ -147,7 +147,7 @@ class FollowController {
 
   async getNotFollows(req, res) {
     try {
-      
+
       const { followerId } = req.query;
       if (!ObjectId.isValid(followerId)) {
         return res

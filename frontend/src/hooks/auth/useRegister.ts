@@ -1,24 +1,24 @@
 import { User } from '../../types';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import { useSnackbar } from '../../components/shared/SnackBarProvider';
 
 
 const useRegister = () => {
-    const register = async (email:string, password:string, confirmedPassword: string, firstName:string, lastName:string, phone: string): Promise<boolean> => {
+    const register = async (email: string, password: string, confirmedPassword: string, firstName: string, lastName: string, phone: string): Promise<boolean> => {
         debugger;
 
-        
+
         if (password !== confirmedPassword) {
             return false
         }
-        
 
-        const url = "http://127.0.0.1:5000/api/v1/register"
+
+        const url = "http://localhost:5000/api/v1/register"
         try {
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json" 
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     "email": email,
@@ -34,14 +34,14 @@ const useRegister = () => {
             }
 
             return true
-        } catch(e) {
+        } catch (e) {
             console.log("Some errors happen", e)
             return false
         }
-            
+
     }
 
-    return {register}
+    return { register }
 
 }
 

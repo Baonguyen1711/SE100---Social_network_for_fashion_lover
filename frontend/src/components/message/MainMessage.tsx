@@ -40,12 +40,12 @@ const MainMessage = () => {
     //const {messages,setMessages} = useSocket()
     const [isSender, setIsSender] = useState<boolean | undefined>(undefined)
     const currentEmail = localStorage.getItem("email")
-    
-    
+
+
     //console.log("selectedUserEmails", selectedUserEmails)
     //const { selectedUserEmail, setSelectedUserEmail } = useSelectedUser()
     const selectedUser: Recipent = {
-        senderEmail: currentEmail ,
+        senderEmail: currentEmail,
         recipentEmail: selectedUserEmail || null,
         content: null
     }
@@ -55,7 +55,7 @@ const MainMessage = () => {
         <>
             <MessageHeader />
             <MessageDisplay isChatbot={false} />
-            <MessageInput recipent={selectedUser} />
+            <MessageInput recipent={selectedUser} isChatbot={false} />
         </>
     )
 

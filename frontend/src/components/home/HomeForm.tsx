@@ -9,6 +9,7 @@ import {
 } from "../profile/User/AccessUrlContext";
 import { getUserByUserId } from "../../sercives/api";
 import { lightTheme } from "../../themes/theme";
+import StoryDisplay from "./StoryDisplay";
 
 const HomeForm = () => {
     const [userData, setUserData] = useState<User>();
@@ -37,7 +38,9 @@ const HomeForm = () => {
     return (
         <div style={backgr} className={style.coverContainer}>
             <div className={style.bodyContainer}>
+
                 <AccessUrlProvider type="home" userId={localStorage.getItem("user_id")}>
+                    <StoryDisplay />
                     <PostsDisplay />
                 </AccessUrlProvider>
             </div>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 //const bcrypt = require('bcrypt')
+const User = require('./User');
 mongoose.set('debug', true)
 
 const FashionSocial = mongoose.connection.useDb('FashionSocial');
@@ -18,12 +19,12 @@ const FollowsSchema = new mongoose.Schema({
         require: true
     },
     isDelete: {
-        type:Boolean,
-        require:true
+        type: Boolean,
+        require: true
     },
     isIgnore: {
-        type:Boolean,
-        require:true
+        type: Boolean,
+        require: true
     }
 })
 

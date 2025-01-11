@@ -352,41 +352,41 @@ export async function handleLikeAPI(postId: string | undefined, type: string) {
     };
 
 
-      const infoUrl = `http://localhost:5000/api/v1/user/info?email=${localStorage.getItem("email")}`;
-      try {
-        const response = await fetch(infoUrl, {
-          method: "GET",
-        });
-        if (!response.ok) {
-          throw new Error("Error in getting user");
-        }
-
-        const data = await response.json();
-
-        const userAvatar = data.userInfo.avatar
-        const userName = `${data.userInfo.firstname} ${data.userInfo.lastname}`
-        const event: EventSocket = {
-          eventType: "like",
-          postId: postId,
-          userName: userName,
-          userAvatar: userAvatar,
-          createdAt: new Date,
-          postOwnerEmail: postOwnerEmail
-        }
-
-        handleSocketEmit([event])
-      } catch(e) {
-        console.log(e)
+    const infoUrl = `http://localhost:5000/api/v1/user/info?email=${localStorage.getItem("email")}`;
+    try {
+      const response = await fetch(infoUrl, {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error("Error in getting user");
       }
 
+      const data = await response.json();
+
+      const userAvatar = data.userInfo.avatar
+      const userName = `${data.userInfo.firstname} ${data.userInfo.lastname}`
+      const event: EventSocket = {
+        eventType: "like",
+        postId: postId,
+        userName: userName,
+        userAvatar: userAvatar,
+        createdAt: new Date,
+        postOwnerEmail: postOwnerEmail
+      }
+
+      handleSocketEmit([event])
+    } catch (e) {
+      console.log(e)
+    }
+
     socket.emit("newLike", like);
-      const result = await response.json();
-      //setCurrentPost(result.updatedPost);
-      //setPost(result.updatedPost);
-      //setIsLiked(result.updatedPost.isLiked)
-      return result;
-    
-  }catch (e) {
+    const result = await response.json();
+    //setCurrentPost(result.updatedPost);
+    //setPost(result.updatedPost);
+    //setIsLiked(result.updatedPost.isLiked)
+    return result;
+
+  } catch (e) {
     console.error(e);
   }
 }
@@ -544,12 +544,12 @@ export async function handleUpdateCommentAPI(content: String | undefined, commen
 }
 
 export async function handleGetFollowingByUserId(userId: string | null | undefined, searchString: string | null = "") {
-  console.log("userId","searchString",userId,searchString)
+  console.log("userId", "searchString", userId, searchString)
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/follow/getfollowingbyuserid?followerId=${userId}&searchString=${searchString}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         }
@@ -570,7 +570,7 @@ export async function handleGetFollowerByUserId(userId: string | null | undefine
     const response = await fetch(
       `http://localhost:5000/api/v1/follow/getfollowerbyuserid?followingId=${userId}&searchString=${searchString}`,
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         }
@@ -607,8 +607,7 @@ export async function handleDeleteFollow(followerId: string | undefined, followi
   }
 }
 
-export async function handleSearchUserByUsername(searchString:string|null)
-{
+export async function handleSearchUserByUsername(searchString: string | null) {
   //console.log("abcd",searchString)
   try {
     const response = await fetch(
@@ -631,9 +630,8 @@ export async function handleSearchUserByUsername(searchString:string|null)
 }
 
 
-export async function handleWriteHistoryAPI(userId:string|null,targetId:string,type:string)
-{
-  console.log("handleWriteHistory",userId,targetId,type)
+export async function handleWriteHistoryAPI(userId: string | null, targetId: string, type: string) {
+  console.log("handleWriteHistory", userId, targetId, type)
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/history/create`,
@@ -645,7 +643,7 @@ export async function handleWriteHistoryAPI(userId:string|null,targetId:string,t
         body: JSON.stringify({
           userId: userId,
           targetId: targetId,
-          type:type
+          type: type
         }),
       }
     );
@@ -659,8 +657,7 @@ export async function handleWriteHistoryAPI(userId:string|null,targetId:string,t
   }
 }
 
-export async function handleDeleteHistoryByIdAPI(userId:string|null,targetId:string,type:string)
-{
+export async function handleDeleteHistoryByIdAPI(userId: string | null, targetId: string, type: string) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/history/delete`,
@@ -672,7 +669,7 @@ export async function handleDeleteHistoryByIdAPI(userId:string|null,targetId:str
         body: JSON.stringify({
           userId: userId,
           targetId: targetId,
-          type:type
+          type: type
         }),
       }
     );
@@ -686,8 +683,7 @@ export async function handleDeleteHistoryByIdAPI(userId:string|null,targetId:str
   }
 }
 
-export async function handleGetSearchListByIdAPI(userId:string|null)
-{
+export async function handleGetSearchListByIdAPI(userId: string | null) {
   try {
     const response = await fetch(
       `http://localhost:5000/api/v1/history/gethistorysearch`,

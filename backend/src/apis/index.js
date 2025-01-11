@@ -10,11 +10,12 @@ const likeEndPoint = require('./like')
 const userEndPoint = require('./user')
 const notificationEndpoint = require('./notification')
 const chatbotEndpoint = require('./chatbot')
+const storyEndPoint = require('./story');
 
 function api(app) {
 
     app.post('/api/v1/register', registerEndPoint)
-    
+
     app.post('/api/v1/login', loginEndPoint)
     app.get('/api/v1/login', loginEndPoint)
 
@@ -22,13 +23,14 @@ function api(app) {
     app.use('/api/v1/post', postEndPoint)
     app.use('/api/v1/event', eventEndPoint)
     app.use('/api/v1/follow', followEndPoint)
-    app.use('/api/v1/postuser',postUserEndPoint)
-    app.use('/api/v1/like',likeEndPoint)
-    app.use('/api/v1/comment',commentEndPoint)
+    app.use('/api/v1/postuser', postUserEndPoint)
+    app.use('/api/v1/like', likeEndPoint)
+    app.use('/api/v1/comment', commentEndPoint)
     app.use('/api/v1/user', userEndPoint)
     app.use('/api/v1/notification', notificationEndpoint)
-    
+
     app.use('/api/v1/chatbot', chatbotEndpoint)
+    app.use('/api/v1/story', storyEndPoint);
 }
 
 module.exports = api

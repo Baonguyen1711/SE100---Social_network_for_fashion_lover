@@ -42,7 +42,7 @@ export interface Recipent {
   image?: string
 }
 
-export interface  EventSocket {
+export interface EventSocket {
   eventType: string,
   postId: string | null | undefined,
   createdAt: Date,
@@ -156,6 +156,10 @@ export interface FormPost {
   images: string[] | undefined;
 }
 
+export interface FormStory {
+  mediaUrl: string[] | undefined;
+}
+
 export interface FormUser {
   firstname: string | undefined;
   lastname: string | undefined;
@@ -227,3 +231,17 @@ export interface PostComment {
   parentId: string;
 }
 export type AuthAction = LogInAction | LogOutAction;
+
+export interface Story {
+  _id: string;
+  mediaUrl: string;
+  userId: string;
+  expiryTime: string; // Thời gian hết hạn, cần có trong dữ liệu từ backend
+  isDeleted: boolean;
+  isViewed: boolean;
+}
+
+export interface ApiResponse {
+  stories: Story[]; // stories là mảng các câu chuyện
+  user: User;       // user là thông tin người dùng
+}
